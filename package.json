@@ -1,11 +1,19 @@
 {
-  "name": "app",
+  "name": "loop",
   "version": "0.0.0",
   "private": true,
   "engines": {
     "node": ">=6",
     "npm": ">=3.8"
   },
+  "contributors":[
+    {"name":"Prateek Chhetri"},
+    {"name":"Emily Meyer"},
+    {"name":"Jacob Pandil"},
+    {"name":"Dan Pettay"},
+    {"name":"Jack Staker"},
+    {"name":"Alex Valaitis"}
+  ],
   "dependencies": {
     "babel-polyfill": "^6.9.1",
     "classnames": "^2.2.5",
