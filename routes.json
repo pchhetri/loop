@@ -14,5 +14,7 @@
     "page": "./pages/about"
   },
   {
+    "path": "/terms",
+    "page": "./pages/terms"
   }
 ]
