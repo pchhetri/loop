@@ -13,6 +13,10 @@ import s from './Welcome.css'
 
 class Welcome extends React.Component {
 
+  submit(){
+    var val = this.refs.roomCode.inputRef.value;
+    alert('Room code entered was: ' + val);
+  }
   render() {
     return (
       <Card shadow={0} className={s.card}>
@@ -26,11 +30,11 @@ class Welcome extends React.Component {
           Simply enter your code below!
         </CardText>
         <CardActions border>
-          <Textfield onChange={() => {}} pattern="-?[0-9]*(\.[0-9]+)?"
+          <Textfield onChange={() => {}} ref="roomCode" pattern="-?[0-9]*(\.[0-9]+)?"
           error="Input is not a number!" label="Number..." style={{
             width: '200px'
           }}/>
-          <Button colored>SUBMIT</Button>
+          <Button colored onClick={this.submit.bind(this)}>SUBMIT</Button>
         </CardActions>
       </Card>
     )
