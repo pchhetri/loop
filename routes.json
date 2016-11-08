@@ -16,5 +16,9 @@
   {
     "path": "/terms",
     "page": "./pages/terms"
+  },
+  {
+    "path": "/admin",
+    "page": "./pages/admin"
   }
 ]
