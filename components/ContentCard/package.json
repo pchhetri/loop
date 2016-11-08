@@ -1,0 +1,6 @@
+{
+  "name": "ContentCard",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./ContentCard.js"
+}

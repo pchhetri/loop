@@ -1,0 +1,49 @@
+/**
+ * React Static Boilerplate
+ * https://github.com/koistya/react-static-boilerplate
+ *
+ * Copyright © 2015-2016 Konstantin Tarkus (@koistya)
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.txt file in the root directory of this source tree.
+ */
+
+.content {
+  display: flex;
+  position: relative;
+  padding: 10px;
+  flex-direction: column;
+  overflow-y: auto;
+  justify-content: space-around;
+  overflow-x: hidden;
+  flex-grow: 1;
+}
+
+.smallCardContainer {
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+.largeCardContainer {
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+.smallCard {
+  flex: 1;
+  height: 200px;
+  min-width: 200px;
+  max-width: 350px;
+  padding: 5px;
+}
+
+.largeCard {
+   flex: 1;
+   min-width: 250px;
+   height: 400px;
+   padding: 5px;
+}

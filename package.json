@@ -6,13 +6,25 @@
     "node": ">=6",
     "npm": ">=3.8"
   },
-  "contributors":[
-    {"name":"Prateek Chhetri"},
-    {"name":"Emily Meyer"},
-    {"name":"Jacob Pandil"},
-    {"name":"Dan Pettay"},
-    {"name":"Jack Staker"},
-    {"name":"Alex Valaitis"}
+  "contributors": [
+    {
+      "name": "Prateek Chhetri"
+    },
+    {
+      "name": "Emily Meyer"
+    },
+    {
+      "name": "Jacob Pandl"
+    },
+    {
+      "name": "Dan Pettay"
+    },
+    {
+      "name": "Jack Staker"
+    },
+    {
+      "name": "Alex Valaitis"
+    }
   ],
   "dependencies": {
     "babel-polyfill": "^6.9.1",
