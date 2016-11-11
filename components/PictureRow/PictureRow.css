@@ -1,20 +1,25 @@
 .rowContainer {
-  display: flex;
-  align-items: center;
-  flex: 2;
+  display: block;
+  width: 100%;
   flex-direction: row;
 	background: white;
 	justify-content: space-around;
-	height: 150px;
-  min-height: 80px;
-  width: 100%;
 }
+
+.rowContent {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+	justify-content: space-around;
+  min-height: 80px;
+}
+
 
 .rowContainer:hover{
   background: rgba(0,0,0,.12);
 }
 
-.checkBtn {
+/*.checkBtn {
   align-items: flex-start;
   justify-content: center;
   flex-grow: 1;
@@ -38,10 +43,10 @@
   margin: 10px 0 0 0;
   height: 150px;
   padding: 10px 0 0 0;
-}
+}*/
 
 .roomIcon {
-  height: 85%;
+  max-height: 50px;
   flex: 0.1;
   border-radius: 4px;
 }
@@ -61,7 +66,7 @@
 }
 
 .timeText {
-	flex: 0.1;
+	flex: 0.2;
   align-self: center;
   font-size: 16px;
   font-weight: bold;

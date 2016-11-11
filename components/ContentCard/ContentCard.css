@@ -5,35 +5,36 @@
   display: flex;
   flex-flow: column;
   overflow: hidden;
-  background: #5271C2;
+  margin: auto;
   border-radius: 5px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   -moz-transition: 0.5s;-o-transition: 0.5s;-webkit-transition: 0.5s; transition: 0.5s;
 }
 
-.title {
+.header {
   height: 20px;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   color: white;
+  background: #5271C2;
   font-size: 16px;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
   padding: 10px;
+}
+
+.title {
+
 }
 
 .icon {
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 10px;
-  flex: 2;
+  display: block;
+  flex: 1 1 0%;
   background: white;
-  overflow-y: auto;
-  overflow-x: hidden;
-  align-items: flex-start;
+  overflow: auto;
   font-size: 10em;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
 }

@@ -106,7 +106,9 @@ class AdminPage extends React.Component {
 const renderSmallCards = ({title, color, iconName, data, unit}, key) => (
   <div key={key} className={s.smallCard}>
     <ContentCard title={title} color={color} iconName={iconName}>
-      <MetricText mainText={data} subText={unit}/>
+      <div className={s.metricText}>
+        <MetricText mainText={data} subText={unit}/>
+      </div>
     </ContentCard>
   </div>
 )

@@ -12,8 +12,8 @@ import React, { PropTypes } from 'react'
 import s from './ContentCard.css'
 
 const ContentCard = ({title="", iconName="face", color="#5271C2", children}) => (
-  <div className={s.card} style={{backgroundColor: color}}>
-    <div className={s.title}>
+  <div className={s.card}>
+    <div className={s.header} style={{backgroundColor: color}}>
       <span className={`material-icons ${s.icon}`}>{iconName}</span>
       <span className={s.titleText}>{title}</span>
     </div>
