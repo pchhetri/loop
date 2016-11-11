@@ -6,13 +6,15 @@ const PictureRow = ({roomName, roomDetail, info, time}) => {
   const minutesTextClass = time < 35 ? s.blackText : s.redText
   return (
       <div className={s.rowContainer}>
-        <img className={s.roomIcon} src='http://www.stanleyhotel.com/uploads/content-photos/lodge-room.jpg'/>
-        <div className={s.detailsTextContainer}>
-          <span className={s.roomNameText}>{roomName}</span>
-          <span className={s.roomDetailText}>{roomDetail}</span>
-          <span className={s.infoText}>{info.type}</span>
+          <div className={s.rowContent}>
+          <img className={s.roomIcon} src='http://www.stanleyhotel.com/uploads/content-photos/lodge-room.jpg'/>
+          <div className={s.detailsTextContainer}>
+            <span className={s.roomNameText}>{roomName}</span>
+            <span className={s.roomDetailText}>{roomDetail}</span>
+            <span className={s.infoText}>{info.type}</span>
+          </div>
+          <span className={`${s.timeText} ${minutesTextClass}`}>{time} min ago</span>
         </div>
-        <span className={`${s.timeText} ${minutesTextClass}`}>{time} min ago</span>
       </div>
   )
 }
