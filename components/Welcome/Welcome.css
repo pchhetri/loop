@@ -1,6 +1,6 @@
 .card {
   width: 400px;
-  display: table;
+  display: block;
   margin: 0 auto;
 }
 
@@ -14,5 +14,12 @@
   .card {
     margin: 0 auto;
     width: 350px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .card {
+    margin: 0 auto;
+    width: 95%;
   }
 }

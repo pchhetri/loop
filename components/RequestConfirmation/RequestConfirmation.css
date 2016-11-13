@@ -28,3 +28,10 @@
 .cardActions {
   align-items: center;
 }
+
+@media screen and (max-width: 360px) {
+  .card {
+    margin: 0 auto;
+    width: 95%;
+  }
+}
