@@ -1,0 +1,16 @@
+.metricText {
+  display: inline-flex;
+  align-self: center;
+  flex-direction: row;
+  align-items: baseline;
+  vertical-align: text-bottom;
+}
+
+.mainText {
+  font-size: .55em;
+}
+
+.subText {
+  font-size: .2em;
+  padding: 0 0 0 7px;
+}

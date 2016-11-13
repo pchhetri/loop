@@ -1,0 +1,46 @@
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  overflow: hidden;
+  margin: auto;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -moz-transition: 0.5s;-o-transition: 0.5s;-webkit-transition: 0.5s; transition: 0.5s;
+}
+
+.header {
+  height: 20px;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  color: white;
+  background: #5271C2;
+  font-size: 16px;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+.title {
+
+}
+
+.icon {
+}
+
+.content {
+  display: block;
+  flex: 1 1 0%;
+  background: white;
+  overflow: auto;
+  font-size: 10em;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.titleText {
+  padding: 0 0 0 5px;
+}
+
+.card:hover{box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.2), 0 18px 60px 0 rgba(0, 0, 0, 0.19)}

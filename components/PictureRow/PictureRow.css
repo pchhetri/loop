@@ -1,0 +1,82 @@
+.rowContainer {
+  display: block;
+  width: 100%;
+  flex-direction: row;
+	background: white;
+	justify-content: space-around;
+}
+
+.rowContent {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+	justify-content: space-around;
+  min-height: 80px;
+}
+
+
+.rowContainer:hover{
+  background: rgba(0,0,0,.12);
+}
+
+/*.checkBtn {
+  align-items: flex-start;
+  justify-content: center;
+  flex-grow: 1;
+  background: #72bb53;
+  margin: 10px 0 0 0;
+  padding: 10px 0 0 0;
+  border-radius: 8px;
+  height: 150px;
+}
+
+.hiddenIcon {
+  color: white;
+}
+
+.deleteBtn {
+  align-items: flex-end;
+  justify-content: center;
+  flex-grow: 1;
+  background: #ffb253;
+  border-radius: 8px;
+  margin: 10px 0 0 0;
+  height: 150px;
+  padding: 10px 0 0 0;
+}*/
+
+.roomIcon {
+  max-height: 50px;
+  flex: 0.1;
+  border-radius: 4px;
+}
+
+.detailsTextContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 0.6;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.roomNameText {
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
+}
+
+.timeText {
+	flex: 0.2;
+  align-self: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+}
+
+.redText {
+  color: red;
+}
+
+.blackText {
+  color: green;
+}
