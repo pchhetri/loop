@@ -1,0 +1,12 @@
+module.exports = {
+  firebase: {
+    apiKey: '',
+    authDomain: '',
+    databaseUrl: '',
+  },
+  s3: {
+    bucket: '',
+    accessKeyId: '',
+    secretAccessKey: '',
+  },
+};

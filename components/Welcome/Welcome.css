@@ -1,9 +1,18 @@
 .card {
-  width: 600px;
+  width: 400px;
+  display: table;
+  margin: 0 auto;
 }
 
-@media screen and (max-width: 480px) {
+.center-div {
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+}
+
+@media screen and (max-width: 840px) {
   .card {
-    width: auto;
+    margin: 0 auto;
+    width: 350px;
   }
 }
