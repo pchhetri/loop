@@ -14,6 +14,7 @@ const fs = require('fs');
 const del = require('del');
 const ejs = require('ejs');
 const webpack = require('webpack');
+const globalConfig = require('./config');
 
 // TODO: Update configuration settings
 const config = {
@@ -96,14 +97,25 @@ tasks.set('build', () => {
 // Build and publish the website
 // -----------------------------------------------------------------------------
 tasks.set('publish', () => {
-  const firebase = require('firebase-tools');
-  return run('build')
-    .then(() => firebase.login({ nonInteractive: false }))
-    .then(() => firebase.deploy({
-      project: config.project,
-      cwd: __dirname,
-    }))
-    .then(() => { setTimeout(() => process.exit()); });
+  global.DEBUG = process.argv.includes('--debug') || false;
+  const s3 = require('s3');
+  return run('build').then(() => new Promise((resolve, reject) => {
+    const client = s3.createClient({
+      s3Options: {
+        region: 'us-east-1',
+        sslEnabled: true,
+        accessKeyId: globalConfig.s3.accessKeyId,
+        secretAccessKey: globalConfig.s3.secretAccessKey,
+      },
+    });
+    const uploader = client.uploadDir({
+      localDir: 'public',
+      deleteRemoved: true,
+      s3Params: { Bucket: globalConfig.s3.bucket },
+    });
+    uploader.on('error', reject);
+    uploader.on('end', resolve);
+  }));
 });
 
 //
