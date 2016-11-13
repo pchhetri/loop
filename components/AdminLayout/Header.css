@@ -8,22 +8,50 @@
 * LICENSE.txt file in the root directory of this source tree.
 */
 
-.row {
-  padding: 0 16px;
-}
 .title {
   color: #fff;
   text-decoration: none;
+  align-self: center;
+  padding: 0 10px 0 0;
 }
 
-.logo {
+.accountSection {
+  display: flex;
+  justify-content: space-around
+}
+
+.row {
+  padding: 0 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.icon {
   height: 45px;
+}
+
+.header {
+    height: 50px;
+    flex-shrink: 0;
 }
 
 @media screen and (max-width: 1024px) {
 
   .header {
     display: flex;
+  }
+
+  .row {
+    padding: 0 16px;
+  }
+
+  .logo {
+    height: 45px;
+  }
+  .person{
+    height:45px;
+    /*padding-left: 50px;*/ /*change to 1050*/
   }
 
 }

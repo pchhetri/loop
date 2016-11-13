@@ -9,7 +9,7 @@
  */
 
 import React from 'react'
-import Layout from '../../components/Layout'
+import AdminLayout from '../../components/AdminLayout'
 import s from './styles.css'
 import { title, html } from './index.md'
 import ContentCard from '../../components/ContentCard/ContentCard'
@@ -90,7 +90,7 @@ class AdminPage extends React.Component {
 
   render() {
     return (
-      <Layout className={s.content}>
+      <AdminLayout className={s.content}>
         <div className={s.smallCardContainer}>
           {smallContentCards.map(renderSmallCards)}
         </div>
@@ -98,7 +98,7 @@ class AdminPage extends React.Component {
           {renderLargeCard('Requests By Room', colors.brightGreen, "check")}
           {renderActiveRequests('Currently Active Issues', colors.redMedium, "check")}
         </div>
-      </Layout>
+      </AdminLayout>
     )
   }
 }
