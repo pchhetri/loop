@@ -9,30 +9,21 @@
 */
 
 .row {
-  padding: 40px;
+  padding: 0 16px;
 }
-
 .title {
   color: #fff;
   text-decoration: none;
 }
 
 .logo {
-  height: 65px;
+  height: 45px;
 }
 
 @media screen and (max-width: 1024px) {
 
   .header {
     display: flex;
-  }
-
-  .row {
-    padding: 0 16px;
-  }
-
-  .logo {
-    height: 45px;
   }
 
 }
