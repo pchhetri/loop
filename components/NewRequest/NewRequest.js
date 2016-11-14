@@ -39,9 +39,14 @@ class NewRequest extends React.Component {
   }
 
   render() {
+
+    const cardTitleBackground = {
+      backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../img/rooms/${this.state.type}.jpg)`
+    };
+
     return (
       <Card shadow={0} className={s.card}>
-        <div className={`mdl-card__title mdl-card--expand ${s.cardTitle}`}>
+        <div className={`mdl-card__title mdl-card--expand ${s.cardTitle}`} style={cardTitleBackground}>
           <h2 className={`mdl-card__title-text ${s.cardTitleText}`}>{this.state.name}</h2>
         </div>
         <CardText>
