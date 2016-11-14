@@ -13,6 +13,8 @@
 
 .cardTitleText {
   color: white;
+  align-self: flex-end;
+  padding: 2px 0;
 }
 
 .list {

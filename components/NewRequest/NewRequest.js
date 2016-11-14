@@ -47,10 +47,13 @@ class NewRequest extends React.Component {
     return (
       <Card shadow={0} className={s.card}>
         <div className={`mdl-card__title mdl-card--expand ${s.cardTitle}`} style={cardTitleBackground}>
-          <h2 className={`mdl-card__title-text ${s.cardTitleText}`}>{this.state.name}</h2>
+          <div className={s.cardTitleText}>
+            <h2 className={`mdl-card__title-text ${s.cardTitleText}`}>{this.state.name}</h2>
+            <h2 className={`mdl-card__title-text ${s.cardTitleText}`} style={{fontSize:'16px'}}>{this.state.rel_location}</h2>
+          </div>
         </div>
         <CardText>
-          <p>Please select an issue.</p>
+          <h5>Please select an issue.</h5>
           <List className={s.list}>
             {this.state.issues.map(this.eachChoice)}
             <Textfield onChange={() => {}} label="Additional Comments..." rows={4} className={s['text-field']}/>
