@@ -35,6 +35,7 @@ class RequestPage extends React.Component {
    handleNewRequest(){
      const selectedIssues = this.state.room.default_requests.filter((req, index) => this.state.checked[index])
      console.log(selectedIssues)
+    //  const requests = selectedIssues.
    }
 
    handleCheck(event){

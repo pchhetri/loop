@@ -22,8 +22,8 @@ const NewRequest = ({room, onRequest, onCheck}) => (
     <CardText>
       <p>Please select an issue.</p>
       <List className={s.list}>
-        {room.default_requests.map(choice => eachChoice(choice, onCheck))}
-        <Textfield onChange={() => {}} label="Additional Comments..." rows={4} className={s['text-field']}/>
+        {room.default_requests.map((choice, index) => eachChoice(choice, index, onCheck))}
+        <Textfield onChange={() => {}} floatingLabel rows={2} label="Other issue..." className={s['text-field']}/>
       </List>
     </CardText>
     <CardActions border>
@@ -32,11 +32,11 @@ const NewRequest = ({room, onRequest, onCheck}) => (
   </Card>
 )
 
-const eachChoice = (choice, onCheck) => (
-      <ListItem twoLine key={choice.id}>
+const eachChoice = (choice, index, onCheck) => (
+      <ListItem twoLine key={index}>
         <ListItemContent subtitle={choice.detail}>{choice.description}</ListItemContent>
         <ListItemAction>
-          <Checkbox ripple value={choice.id} onChange={choice => onCheck(choice)}/>
+          <Checkbox ripple value={index} onChange={choice => onCheck(choice)}/>
         </ListItemAction>
       </ListItem>
     )
