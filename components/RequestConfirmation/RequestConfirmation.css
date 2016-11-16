@@ -1,0 +1,30 @@
+.card {
+  width: 320px;
+  height: auto;
+  display: table;
+  margin: 0 auto;
+}
+
+.cardTitle {
+  height: 150px;
+  background-color: #84EC64;
+}
+
+.cardTitleText {
+  color: white;
+}
+
+.center-div {
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+}
+
+.check-icon {
+  font-size: 60px;
+  color: #FFFFFF;
+}
+
+.cardActions {
+  align-items: center;
+}

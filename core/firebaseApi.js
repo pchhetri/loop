@@ -1,5 +1,5 @@
 import firebase from 'firebase'
-import globalConfig from '../.config'
+import globalConfig from '../config'
 
 const ORGANIZATIONS = 'organizations'
 const LOCATIONS     = 'locations'
@@ -8,6 +8,8 @@ const ROOMS         = 'rooms'
 const REQUESTS      = 'requests'
 
 const ONCE_VALUE    = 'value'
+
+const PIN = "pin" //room.pin
 
 
 export function firebaseClient() {
@@ -25,18 +27,15 @@ export function firebaseClient() {
   return firebase
 }
 
-export function fetchRoom(roomPin) {
+export function fetchRoom(roomCode) {
   return firebaseClient()
     .database()
     .ref(ROOMS)
-    .orderByKey()
+    .orderByChild(PIN)
+    .equalTo(roomCode)
     .once(ONCE_VALUE)
-    .then(organizationsResponse => {
-      const data = organizationsResponse.val()
-      return Object.keys(data).map(function(val) {
-        var org = data[val]
-        org.key = val
-        return org
+    .then(roomArrayRes => {
+        const roomArray = roomArrayRes.val();
+        return roomArray ? roomArray[0] : null
       })
-    })
-}
+  }

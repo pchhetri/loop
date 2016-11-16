@@ -1,0 +1,29 @@
+.card {
+  width: 320px;
+  height: auto;
+  display: table;
+  margin: 0 auto;
+}
+
+.cardTitle {
+  background: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(http://grfx.cstv.com/photos/schools/gonz/non-sport/locker-room-picture-mw-400.jpg) center no-repeat;
+  height: 150px;
+}
+
+.cardTitleText {
+  color: white;
+}
+
+.list {
+  width: 300px;
+  margin-bottom: 0px;
+}
+
+.text-field {
+  width: 200px;
+  margin-left: 16px;
+}
+
+.button {
+  float: right;
+}

@@ -8,27 +8,37 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 import Layout from '../../components/Layout';
 import s from './styles.css';
-import { title, html } from './index.md';
+import {title, html} from './index.md';
 import Welcome from '../../components/Welcome'
+import Loader from '../../components/Loader'
+import NewRequest from '../../components/NewRequest'
+import RequestConfirmation from '../../components/RequestConfirmation'
 
 class HomePage extends React.Component {
-
-  static propTypes = {
-    articles: PropTypes.array.isRequired,
-  };
 
   componentDidMount() {
     document.title = title;
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {
+    }
+  }
+
+  handleCode(code)  {
+    history.push(`/${code}`);
+  }
+
+
   render() {
     return (
       <Layout className={s.content}>
-        <div dangerouslySetInnerHTML={{ __html: html }} />
-        <Welcome />
+        {/* <div dangerouslySetInnerHTML={{ __html: html }} /> */}
+        <NewRequest onCode={this.handleCode.bind(this)}/>
       </Layout>
     );
   }

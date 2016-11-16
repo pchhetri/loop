@@ -5,6 +5,11 @@
     "chunk": "main"
   },
   {
+    "path": "/:roomId",
+    "page": "./pages/requests",
+    "chunk": "main"
+  },
+  {
     "path": "/error",
     "page": "./pages/error",
     "chunk": "main"
