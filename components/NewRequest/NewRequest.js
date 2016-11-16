@@ -16,7 +16,7 @@ import {
 
 const NewRequest = ({room, onRequest, onCheck}) => (
   <Card shadow={0} className={s.card}>
-    <div className={`mdl-card__title mdl-card--expand ${s.cardTitle}`}>
+    <div className={`mdl-card__title mdl-card--expand ${s.cardTitle}`} style={{background: `url(${room.image_url}) center / cover`}}>
       <h2 className={`mdl-card__title-text ${s.cardTitleText}`}>{room.title}</h2>
     </div>
     <CardText>
