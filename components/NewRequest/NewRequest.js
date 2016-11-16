@@ -25,7 +25,7 @@ class NewRequest extends React.Component {
   eachChoice(choice) {
     return (
       <ListItem twoLine key={choice.id}>
-        <ListItemContent subtitle={choice.description}>{choice.title}</ListItemContent>
+        <ListItemContent subtitle={choice.description} style={{height: 'auto'}}>{choice.title}</ListItemContent>
         <ListItemAction>
           <Checkbox/>
         </ListItemAction>
@@ -59,7 +59,7 @@ class NewRequest extends React.Component {
             <Textfield onChange={() => {}} label="Additional Comments..." rows={4} className={s['text-field']}/>
           </List>
         </CardText>
-        <CardActions border>
+        <CardActions border style={{display:'table'}}>
           <Button colored className={s.button} onClick={this.submit.bind(this)}>SUBMIT</Button>
         </CardActions>
       </Card>
