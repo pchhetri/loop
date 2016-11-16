@@ -9,12 +9,12 @@
  */
 
 import React from 'react';
-import Layout from '../../components/Layout';
+import Layout from '../../components/Layout'
 import s from './styles.css';
-import {title, html} from './index.md';
+import {title, html} from './index.md'
 import Welcome from '../../components/Welcome'
 import Loader from '../../components/Loader'
-import NewRequest from '../../components/NewRequest'
+import history from '../../core/history'
 import RequestConfirmation from '../../components/RequestConfirmation'
 
 class HomePage extends React.Component {
@@ -25,8 +25,7 @@ class HomePage extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-    }
+    this.handleCode = this.handleCode.bind(this)
   }
 
   handleCode(code)  {
@@ -38,7 +37,7 @@ class HomePage extends React.Component {
     return (
       <Layout className={s.content}>
         {/* <div dangerouslySetInnerHTML={{ __html: html }} /> */}
-        <NewRequest onCode={this.handleCode.bind(this)}/>
+        <Welcome onCode={this.handleCode}/>
       </Layout>
     );
   }

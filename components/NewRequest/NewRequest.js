@@ -14,15 +14,16 @@ import {
   Button
 } from 'react-mdl'
 
-const NewRequest = ({room, onRequest}) => (
+const NewRequest = ({room, onRequest}) => {
+  return(
   <Card shadow={0} className={s.card}>
     <div className={`mdl-card__title mdl-card--expand ${s.cardTitle}`}>
-      <h2 className={`mdl-card__title-text ${s.cardTitleText}`}>{this.state.name}</h2>
+      <h2 className={`mdl-card__title-text ${s.cardTitleText}`}>{room.title}</h2>
     </div>
     <CardText>
       <p>Please select an issue.</p>
       <List className={s.list}>
-        {rooms.default_requests.map(eachChoice)}
+        {room.default_requests.map(eachChoice)}
         <Textfield onChange={() => {}} label="Additional Comments..." rows={4} className={s['text-field']}/>
       </List>
     </CardText>
@@ -31,7 +32,7 @@ const NewRequest = ({room, onRequest}) => (
     </CardActions>
   </Card>
 )
-
+}
 const eachChoice = (choice) => (
       <ListItem twoLine key={choice.id}>
         <ListItemContent subtitle={choice.detail}>{choice.description}</ListItemContent>

@@ -12,14 +12,15 @@ const ONCE_VALUE    = 'value'
 const PIN = "pin" //room.pin
 
 
-export function firebaseClient() {
+const firebaseClient = () => {
   if (firebase.apps.length == 1) {
     return firebase // Don't initialize more than one client
   }
 
   const config = {
-    apiKey: globalConfig.firebaseApiKey,
-    authDomain: globalConfig.firebaseAuthDomain,
+    apiKey: globalConfig.firebase.apiKey,
+    authDomain: globalConfig.firebase.authDomain,
+    databaseURL: globalConfig.firebase.databaseURL,
   }
 
   firebase.initializeApp(config)

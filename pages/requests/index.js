@@ -21,6 +21,7 @@ class RequestPage extends React.Component {
     this.state = {
       room: null,
     }
+    this.handleNewRequest = this.handleNewRequest.bind(this)
   }
 
 
@@ -29,18 +30,24 @@ class RequestPage extends React.Component {
     const roomId = match[1]
 
     fetchRoom(roomId)
-      .then(room => {
+      .then((room) => {
+        console.log(room)
         this.setState({room})
       })
    }
 
 
+   handleNewRequest(){
+     console.log("REQUEST!")
+   }
+
+
   render() {
-    room = this.state
+    const {room} = this.state
     return (
       <Layout>
         {/* <div dangerouslySetInnerHTML={{ __html: html }} /> */}
-        {room ? <NewRequest room={room} onRequest={this.handleNewRequest.bind(this)}/>
+        {room ? <NewRequest room={room} onRequest={this.handleNewRequest}/>
                      : <Loader/>}
       </Layout>
     )
@@ -48,4 +55,4 @@ class RequestPage extends React.Component {
 
 }
 
-export default HomePage;
+export default RequestPage;

@@ -17,7 +17,7 @@ const Header = ({name, email}) => {
 
     return (
       <header className={`mdl-layout__header ${s.header}`}>
-          {window.location.pathname === "/" ? null : renderAdminNavigation(name, email)}
+          {window.location.pathname === "/admin" ? renderAdminNavigation(name, email) : null}
       </header>
     )
 }
