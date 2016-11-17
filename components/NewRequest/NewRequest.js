@@ -14,7 +14,7 @@ import {
   Button
 } from 'react-mdl'
 
-const NewRequest = ({room, onRequest, onCheck}) => (
+const NewRequest = ({room, onRequest, onCheck, value, handleTextChange}) => (
   <Card shadow={0} className={s.card}>
     <div className={`mdl-card__title mdl-card--expand ${s.cardTitle}`} style={{background: `url(${room.image_url}) center / cover`}}>
       <h2 className={`mdl-card__title-text ${s.cardTitleText}`}>{room.title}</h2>
@@ -23,11 +23,11 @@ const NewRequest = ({room, onRequest, onCheck}) => (
       <p>Please select an issue.</p>
       <List className={s.list}>
         {room.default_requests.map((choice, index) => eachChoice(choice, index, onCheck))}
-        <Textfield onChange={() => {}} floatingLabel rows={2} label="Other issue..." className={s['text-field']}/>
+        <Textfield value={value} onChange={handleTextChange} floatingLabel rows={2} label="Other issue..." className={s['text-field']}/>
       </List>
     </CardText>
     <CardActions border>
-      <Button colored className={s.button} onClick={()=> onRequest('done')}>SUBMIT</Button>
+      <Button colored className={s.button} onClick={()=> onRequest()}>SUBMIT</Button>
     </CardActions>
   </Card>
 )

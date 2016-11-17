@@ -2,8 +2,9 @@ import React from 'react'
 import Layout from '../../components/Layout'
 import Loader from '../../components/Loader'
 import NewRequest from '../../components/NewRequest'
-import { fetchRoom } from '../../core/firebaseApi'
+import { fetchRoom, putRequests } from '../../core/firebaseApi'
 import update from 'immutability-helper'
+import {NEW_REQUEST} from '../../constants'
 
 
 class RequestPage extends React.Component {
@@ -13,9 +14,11 @@ class RequestPage extends React.Component {
     this.state = {
       room: null,
       checked: null,
+      textFieldValue: '',
     }
     this.handleNewRequest = this.handleNewRequest.bind(this)
     this.handleCheck = this.handleCheck.bind(this)
+    this.handleTextChange = this.handleTextChange.bind(this)
   }
 
 
@@ -25,7 +28,6 @@ class RequestPage extends React.Component {
 
     fetchRoom(roomId)
       .then((room) => {
-        console.log(room)
         const checked = Object.keys(room.default_requests).map(check => false)
         this.setState({room, checked})
       })
@@ -33,9 +35,16 @@ class RequestPage extends React.Component {
 
 
    handleNewRequest(){
-     const selectedIssues = this.state.room.default_requests.filter((req, index) => this.state.checked[index])
-     console.log(selectedIssues)
-    //  const requests = selectedIssues.
+     const selectedIssues = this.state.room.default_requests
+                                      .filter((req, index) => this.state.checked[index])
+                                      .map(issue => ({description: issue.description,
+                                                      comments: this.state.textFieldValue,
+                                                      room_id: this.state.room.id,
+                                                      type_id: issue.type_id,
+                                                      status: NEW_REQUEST,
+                                                    }))
+     putRequests(selectedIssues)
+
    }
 
    handleCheck(event){
@@ -45,13 +54,20 @@ class RequestPage extends React.Component {
      this.setState({checked})
    }
 
+   handleTextChange(event){
+     this.setState({textFieldValue: event.target.value})
+   }
+
 
   render() {
-    const {room} = this.state
+    const {room, textFieldValue} = this.state
     return (
       <Layout>
         {/* <div dangerouslySetInnerHTML={{ __html: html }} /> */}
-        {room ? <NewRequest room={room} onRequest={this.handleNewRequest} onCheck={this.handleCheck}/>
+        {room ? <NewRequest room={room} onRequest={this.handleNewRequest}
+                                        onCheck={this.handleCheck}
+                                        value={textFieldValue}
+                                        handleTextChange={this.handleTextChange}/>
                      : <Loader/>}
       </Layout>
     )
