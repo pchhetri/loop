@@ -32,19 +32,19 @@ const smallContentCards = [
   {
     title: 'Average Response Time',
     color: colors.lightTeal,
-    iconName: "check",
+    iconName: "alarm",
     data: 21.5,
     unit: "min",
   },
   {
     title: 'Current Active Issues',
     color: colors.lightBlue,
-    iconName: "check",
+    iconName: "info",
     data: 5,
     unit: "",
   },
   {
-    title: 'Issues Soved Today',
+    title: 'Issues Solved Today',
     color: colors.brightGreen,
     iconName: "check",
     data: 2,

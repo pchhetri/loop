@@ -16,7 +16,7 @@ import {
   Button
 } from 'react-mdl'
 
-const NewRequest = ({room, onRequest, onCheck, value, handleTextChange}) => (
+const NewRequest = ({room, isChecked, onRequest, onCheck, value, handleTextChange}) => (
   <div>
   <Card shadow={0} className={s.card}>
     <div className={`mdl-card__title mdl-card--expand ${s.cardTitle}`} style={{background: `url(${room.image_url}) center / cover`}}>
@@ -25,7 +25,7 @@ const NewRequest = ({room, onRequest, onCheck, value, handleTextChange}) => (
     <CardText>
       <p>Please select an issue.</p>
       <List className={s.list}>
-        {room.default_requests.map((choice, index) => eachChoice(choice, index, onCheck))}
+        {room.default_requests.map((choice, index) => eachChoice(choice, index, onCheck, isChecked[index]))}
         <Textfield value={value} onChange={handleTextChange} floatingLabel rows={2} label="Other issue..." className={s['text-field']}/>
       </List>
     </CardText>
@@ -36,11 +36,11 @@ const NewRequest = ({room, onRequest, onCheck, value, handleTextChange}) => (
   </div>
 )
 
-const eachChoice = (choice, index, onCheck) => (
-      <ListItem twoLine key={index}>
-        <ListItemContent subtitle={choice.detail}>{choice.description}</ListItemContent>
+const eachChoice = (choice, index, onCheck, isChecked) => (
+      <ListItem twoLine key={index} value={index} onClick={choice => onCheck(choice)}>
+        <ListItemContent value={index} subtitle={choice.detail}>{choice.description}</ListItemContent>
         <ListItemAction>
-          <Checkbox ripple value={index} onChange={choice => onCheck(choice)}/>
+          <Checkbox ripple value={index} checked={isChecked} onChange={choice => onCheck(choice)}/>
         </ListItemAction>
       </ListItem>
     )

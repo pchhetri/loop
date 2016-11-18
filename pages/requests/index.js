@@ -51,7 +51,8 @@ class RequestPage extends React.Component {
    }
 
    handleCheck(event){
-     const index = event.target.value
+     event.preventDefault()
+     const index = event.currentTarget.value
      const checked = this.state.checked
      checked[index] = !checked[index]
      this.setState({checked})
@@ -63,12 +64,13 @@ class RequestPage extends React.Component {
 
 
   render() {
-    const {room, textFieldValue} = this.state
+    const {room, checked, textFieldValue} = this.state
     return (
       <Layout>
         {/* <div dangerouslySetInnerHTML={{ __html: html }} /> */}
-        {room ? <NewRequest room={room} onRequest={this.handleNewRequest}
+        {room && checked ? <NewRequest room={room} onRequest={this.handleNewRequest}
                                         onCheck={this.handleCheck}
+                                        isChecked={checked}
                                         value={textFieldValue}
                                         handleTextChange={this.handleTextChange}/>
                      : <Loader/>}
