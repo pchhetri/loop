@@ -19,6 +19,7 @@ import Loader from '../../components/Loader/Loader'
 import colors from '../../constants/colors'
 import MetricText from '../../components/MetricText/MetricText'
 import { streamRequests, fetchRoomsByIdAndLocation } from '../../core/firebaseApi'
+import moment from 'moment'
 
 const smallContentCards = [
   {
@@ -51,38 +52,6 @@ const smallContentCards = [
   },
 ]
 
-const activeRequests = [
-  {
-    roomName: "Women's Restroom",
-    roomDetail: "Room 1762",
-    info: {status: 0, type: "Overflowing Trash Cans", comments: ""},
-    time: 6
-  },
-  {
-    roomName: "Men's Locker Room",
-    roomDetail: "First Floor",
-    info: {status: 0, type: "Out of Towels", comments: "I'm in the men's locker room and there aren't any clean towels in here..."},
-    time: 12
-  },
-  {
-    roomName: "Fitness Center",
-    roomDetail: "Room A",
-    info: {status: 0, type: "Dirty yoga mats/ wash towels", comments: ""},
-    time: 51
-  },
-  {
-    roomName: "Fitness Center",
-    roomDetail: "Snoozing Room",
-    info: {status: 1, type: "Dirty yoga mats/ wash towels", comments: ""},
-    time: 52
-  },
-  {
-    roomName: "Fitness Center",
-    roomDetail: "Satisfing Room",
-    info: {status: 2, type: "Dirty yoga mats/ wash towels", comments: ""},
-    time: 59
-  },
-]
 
 class AdminPage extends React.Component {
 
@@ -164,22 +133,28 @@ const renderLargeCard = (title, color, iconName) => (
 )
 
 const renderActiveRequests = (title, color, iconName, requests) => {
-  console.log(requests)
   return(
   <div className={s.largeCard}>
     <ContentCard title={title} color={color} iconName={iconName}>
       <div className='' />
-      {requests ? requests.map((request, key) => <PictureRow key={key}
-                                                        info={request.comments}
-                                                        roomName={request.room.name}
-                                                        roomDetail={request.room.detail}
-                                                        time={6}/>
-                                                      )
-                : <Loader />}
+      {requests ? requests.map((request, key) => renderRequestRow(request, key)) : <Loader />}
       <div/>
     </ContentCard>
   </div>
 )
+}
+
+const renderRequestRow = (request, key) => {
+  const isHighPriority = moment().diff(request.created, 'minutes') > 45 ? true : false
+  const timeDiff = moment(request.created).fromNow()
+  return  (<PictureRow key={key}
+              info={request.description}
+              name={request.room.name}
+              detail={request.room.detail}
+              picURL={request.room.image_url}
+              isHighPriority={isHighPriority}
+              time={timeDiff}/>)
+
 }
 
 export default AdminPage

@@ -33,6 +33,7 @@
     "firebase": "^3.6.1",
     "history": "^3.0.0",
     "immutability-helper": "^2.0.0",
+    "moment": "^2.16.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "react-mdl": "^1.6.1",
