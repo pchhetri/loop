@@ -1,8 +1,6 @@
 .card {
-  width: 320px;
+  width: 100%;
   height: auto;
-  display: table;
-  margin: 0 auto;
 }
 
 .cardTitle {
@@ -26,6 +24,14 @@
 
 .button {
   float: right;
+}
+
+.fab {
+  background-color: #10a200;
+  position: fixed;
+  bottom: 15px;
+  right: 20px;
+  z-index: 1000;
 }
 
 input[type="checkbox"] + label span {

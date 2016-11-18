@@ -11,10 +11,13 @@ import {
   CardTitle,
   CardText,
   CardActions,
+  FABButton,
+  Icon,
   Button
 } from 'react-mdl'
 
 const NewRequest = ({room, onRequest, onCheck, value, handleTextChange}) => (
+  <div>
   <Card shadow={0} className={s.card}>
     <div className={`mdl-card__title mdl-card--expand ${s.cardTitle}`} style={{background: `url(${room.image_url}) center / cover`}}>
       <h2 className={`mdl-card__title-text ${s.cardTitleText}`}>{room.title}</h2>
@@ -26,10 +29,11 @@ const NewRequest = ({room, onRequest, onCheck, value, handleTextChange}) => (
         <Textfield value={value} onChange={handleTextChange} floatingLabel rows={2} label="Other issue..." className={s['text-field']}/>
       </List>
     </CardText>
-    <CardActions border>
-      <Button colored className={s.button} onClick={()=> onRequest()}>SUBMIT</Button>
-    </CardActions>
   </Card>
+    <FABButton className={s.fab} ripple accent onClick={()=> onRequest()}>
+      <Icon name="send" />
+    </FABButton>
+  </div>
 )
 
 const eachChoice = (choice, index, onCheck) => (

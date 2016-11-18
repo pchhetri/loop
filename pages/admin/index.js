@@ -15,8 +15,10 @@ import { title, html } from './index.md'
 import ContentCard from '../../components/ContentCard/ContentCard'
 import PictureRow from '../../components/PictureRow/PictureRow'
 import Footer from '../../components/Footer/Footer'
+import Loader from '../../components/Loader/Loader'
 import colors from '../../constants/colors'
 import MetricText from '../../components/MetricText/MetricText'
+import { streamRequests, fetchRoomsByIdAndLocation } from '../../core/firebaseApi'
 
 const smallContentCards = [
   {
@@ -84,9 +86,50 @@ const activeRequests = [
 
 class AdminPage extends React.Component {
 
-  componentDidMount() {
-    document.title = title
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      user: null,                         //TODO: populate with user
+      requests: [],
+      location: {                         //TODO: populate with acutal location
+                  created : 1479353675672,
+                  id : "-KWkLPlvltKizSvBJfN_",
+                  name : "College Library",
+                  organization_id : "-KWkLPlvltKizSvBJfNZ",
+                  updated : 1479353675672
+                }
+    }
+
+    this.onRequestHandler.bind(this)
+
   }
+
+
+  componentDidMount() {
+    streamRequests(this.state.location.id, this.onRequestHandler.bind(this))
+  }
+
+  onRequestHandler(reqSnapshot){
+    const requests = Object.values(reqSnapshot.val())
+    //Grab each room from the requests and extract the roomIds, removing duplicates
+    const roomIds = Object.keys(requests.map(request => request.room_id)
+                                        .reduce ((roomIds, newRoomId) =>
+                                            {
+                                              roomIds[newRoomId] = newRoomId
+                                              return roomIds
+                                            }, {}
+                                          ))
+    fetchRoomsByIdAndLocation(roomIds, this.state.location.id).then((rooms)=>{
+      const requestsWithRooms = requests.map(request => {
+                                                          request.room = rooms[request.room_id]
+                                                          console.log(`Req room: ${request.room_id}`)
+                                                          return request
+                                                        })
+      this.setState({requests: requestsWithRooms})
+    })
+  }
+
 
   render() {
     return (
@@ -96,7 +139,7 @@ class AdminPage extends React.Component {
         </div>
         <div className={s.largeCardContainer}>
           {renderLargeCard('Requests By Room', colors.brightGreen, "check")}
-          {renderActiveRequests('Currently Active Issues', colors.redMedium, "check")}
+          {renderActiveRequests('Currently Active Issues', colors.redMedium, "check", this.state.requests)}
         </div>
       </Layout>
     )
@@ -113,26 +156,30 @@ const renderSmallCards = ({title, color, iconName, data, unit}, key) => (
   </div>
 )
 
-const renderLargeCard = ({title, color, iconName}) => (
+const renderLargeCard = (title, color, iconName) => (
   <div className={s.largeCard}>
     <ContentCard title={title} color={color} iconName={iconName}>
     </ContentCard>
   </div>
 )
 
-const renderActiveRequests = ({title, color, iconName}) => (
+const renderActiveRequests = (title, color, iconName, requests) => {
+  console.log(requests)
+  return(
   <div className={s.largeCard}>
     <ContentCard title={title} color={color} iconName={iconName}>
       <div className='' />
-      {activeRequests.map((request, key) => <PictureRow key={key}
-                                                        info={request.info}
-                                                        roomDetail={request.roomDetail}
-                                                        roomName={request.roomName}
-                                                        time={request.time}/>
-                                                      )}
+      {requests ? requests.map((request, key) => <PictureRow key={key}
+                                                        info={request.comments}
+                                                        roomName={request.room.name}
+                                                        roomDetail={request.room.detail}
+                                                        time={6}/>
+                                                      )
+                : <Loader />}
       <div/>
     </ContentCard>
   </div>
 )
+}
 
 export default AdminPage

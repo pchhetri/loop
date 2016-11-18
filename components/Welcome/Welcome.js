@@ -27,7 +27,7 @@ class Welcome extends React.Component {
           background: 'url("/img/welcome.jpg") center / cover'
         }}>Welcome to LOOP!</CardTitle>
         <CardText>
-          We make submitting issues with a building or facility&nbsp;<i>really</i>&nbsp;easy. Simply enter your code below!
+          We make submitting issues with a building or facility&nbsp;<i>really</i>&nbsp;easy. Simply enter the room code below!
         </CardText>
         <CardActions border>
           <div className={s['center-div']}>

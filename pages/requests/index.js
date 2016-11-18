@@ -4,6 +4,7 @@ import Loader from '../../components/Loader'
 import NewRequest from '../../components/NewRequest'
 import { fetchRoom, putRequests } from '../../core/firebaseApi'
 import update from 'immutability-helper'
+import history from '../../core/history'
 import {NEW_REQUEST} from '../../constants'
 
 
@@ -40,10 +41,12 @@ class RequestPage extends React.Component {
                                       .map(issue => ({description: issue.description,
                                                       comments: this.state.textFieldValue,
                                                       room_id: this.state.room.id,
+                                                      location_id: this.state.room.location_id,
                                                       type_id: issue.type_id,
                                                       status: NEW_REQUEST,
                                                     }))
      putRequests(selectedIssues)
+     history.push(`/requests/confirmation`);
 
    }
 

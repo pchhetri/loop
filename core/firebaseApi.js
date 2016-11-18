@@ -6,10 +6,12 @@ const LOCATIONS     = 'locations'
 const USERS         = 'users'
 const ROOMS         = 'rooms'
 const REQUESTS      = 'requests'
+const ID      = 'id'
 
-const ONCE_VALUE    = 'value'
+const VALUE    = 'value'
 
 const PIN = "pin" //room.pin
+const LOCATION_ID = "location_id" //room.pin
 
 
 const firebaseClient = () => {
@@ -28,34 +30,57 @@ const firebaseClient = () => {
   return firebase
 }
 
-export function fetchRoom(roomCode) {
-  return firebaseClient()
-    .database()
-    .ref(ROOMS)
-    .orderByChild(PIN)
-    .equalTo(roomCode)
-    .once(ONCE_VALUE)
-    .then(roomsRes => {
-        const rooms = roomsRes.val()
-        return rooms ? rooms[Object.keys(rooms)[0]] : null  //grabs the first room since FB gives us multiple objects
-      })
+  export function fetchRoom(roomCode) {
+    return firebaseClient()
+      .database()
+      .ref(ROOMS)
+      .orderByChild(PIN)
+      .equalTo(roomCode)
+      .once(VALUE)
+      .then(roomsRes => {
+          const rooms = roomsRes.val()
+          return rooms ? rooms[Object.keys(rooms)[0]] : null  //grabs the first room since FB gives us multiple objects
+        })
   }
 
-//Add a new request to Firebase
-export function putRequests(requests) {
+
+  export function fetchRoomsByIdAndLocation(roomIds, location_id) {
+    return firebaseClient()
+      .database()
+      .ref(ROOMS)
+      .orderByChild(LOCATION_ID)
+      .equalTo(location_id)
+      .once(VALUE)
+      .then(roomsRes => Object.values(roomsRes.val()).filter(room => roomIds.includes(room.id))
+                                                     .reduce((prevRoom, currRoom) => arrayToObject(prevRoom, currRoom), {}))
+  }
+
+
+  export function streamRequests(location_id, successCallback) {
+    firebaseClient()
+      .database()
+      .ref(REQUESTS)
+      .orderByChild(LOCATION_ID)
+      .on(VALUE, successCallback)
+  }
+
+
+
+  //Add a new request to Firebase
+  export function putRequests(requests) {
     //Add id (via 1st map),  timestamps (via 2nd map), format for update (via reduce)
     const updateRequests = requests.map(request => Object.assign(request, {id: firebase.database().ref(REQUESTS).push().key}))
                                        .map(withTimestamps)
                                        .reduce((prevRequest, currRequest) => updateFormatter(prevRequest, currRequest ,REQUESTS), {})
 
     return firebase.database().ref().update(updateRequests)
-}
+  }
 
 
 //Helper function to add timestamps to firebase objects
 function withTimestamps(obj){
   return Object.assign(obj, {created:firebase.database.ServerValue.TIMESTAMP,
-                                      updated: firebase.database.ServerValue.TIMESTAMP})
+                             updated: firebase.database.ServerValue.TIMESTAMP})
 }
 
 /****
@@ -72,5 +97,10 @@ function withTimestamps(obj){
 function updateFormatter(prevObj, currObj, path) {
   const key = path + '/' + currObj.id
   prevObj[key] = currObj
+  return prevObj
+}
+
+function arrayToObject(prevObj, currObj) {
+  prevObj[currObj.id] = currObj
   return prevObj
 }

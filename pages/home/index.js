@@ -29,7 +29,7 @@ class HomePage extends React.Component {
   }
 
   handleCode(code)  {
-    history.push(`/${code}`);
+    history.push(`/rooms/${code}`);
   }
 
 

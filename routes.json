@@ -5,9 +5,13 @@
     "chunk": "main"
   },
   {
-    "path": "/:roomId",
-    "page": "./pages/requests",
+    "path": "/rooms/:roomId",
+    "page": "./pages/requests/index",
     "chunk": "main"
+  },
+  {
+    "path": "/requests/confirmation",
+    "page": "./pages/requests/confirmation"
   },
   {
     "path": "/error",
