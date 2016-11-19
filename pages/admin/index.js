@@ -145,7 +145,7 @@ class AdminPage extends React.Component {
         </div>
         <div className={s.largeCardContainer}>
           {renderLargeCard('Requests By Room', colors.brightGreen, "check")}
-          {renderActiveRequests('Currently Active Issues', colors.redMedium, "check", this.state.requests, this.actionButtons, this.state.activeTab, this.handleRequestTabChange)}
+          {renderActiveRequests('Currently Active Issues', colors.redMedium, "check", this.state.requests.filter(requestFilter(this.state.activeTab)), this.actionButtons, this.state.activeTab, this.handleRequestTabChange)}
         </div>
       </Layout>
     )
