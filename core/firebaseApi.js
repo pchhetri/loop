@@ -76,6 +76,14 @@ const firebaseClient = () => {
     return firebase.database().ref().update(updateRequests)
   }
 
+  //Add a new request to Firebase
+  export function updateRequestStatus(requestId, status) {
+
+    const updateRequest = {status: status, updated: firebase.database.ServerValue.TIMESTAMP}
+
+    return firebase.database().ref(`${REQUESTS}/${requestId}`).update(updateRequest)
+  }
+
 
 //Helper function to add timestamps to firebase objects
 function withTimestamps(obj){

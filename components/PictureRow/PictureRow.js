@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 import s from './PictureRow.css'
+import {IconButton} from 'react-mdl'
 
-
-const PictureRow = ({name, detail, picURL, info, time, isHighPriority}) => {
+const PictureRow = ({name, detail, picURL, info, time, isHighPriority, actionButtons, value}) => {
   const minutesTextClass = isHighPriority ? s.redText : s.blackText
   return (
       <div className={s.rowContainer}>
@@ -14,6 +14,7 @@ const PictureRow = ({name, detail, picURL, info, time, isHighPriority}) => {
             <span className={s.infoText}>{info}</span>
           </div>
           <span className={`${s.timeText} ${minutesTextClass}`}>{time}</span>
+          {actionButtons.map((button, key) => renderActionButton(button,key, value))}
         </div>
       </div>
   )
@@ -30,13 +31,9 @@ const PictureRow = ({name, detail, picURL, info, time, isHighPriority}) => {
 //   </div>
 // )
 
-const onCheckedRow = (data, secId, rowId) => {
-  alert("You checked " + rowId)
-}
-
-const onSnoozedRow = (data, secId, rowId) => {
-  alert("You snoozed " + rowId)
-}
+const renderActionButton = ({iconName, clickHandler, color}, key, value) => (
+  <IconButton key={key} value={value} style={{color: color}} className={s.actionButton} name={iconName} onClick={clickHandler} />
+)
 
 
 export default PictureRow;

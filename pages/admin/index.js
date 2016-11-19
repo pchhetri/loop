@@ -16,9 +16,11 @@ import ContentCard from '../../components/ContentCard/ContentCard'
 import PictureRow from '../../components/PictureRow/PictureRow'
 import Footer from '../../components/Footer/Footer'
 import Loader from '../../components/Loader/Loader'
+import { Tabs, Tab } from 'react-mdl'
 import colors from '../../constants/colors'
 import MetricText from '../../components/MetricText/MetricText'
-import { streamRequests, fetchRoomsByIdAndLocation } from '../../core/firebaseApi'
+import { streamRequests, fetchRoomsByIdAndLocation, updateRequestStatus } from '../../core/firebaseApi'
+import { NEW_REQUEST, ACK_REQUEST, IGNORED_REQUEST, SATISFIED_REQUEST } from '../../constants'
 import moment from 'moment'
 
 const smallContentCards = [
@@ -58,19 +60,30 @@ class AdminPage extends React.Component {
   constructor(props) {
     super(props)
 
+    this.actionButtons = [
+      {iconName: 'visibility', color:'rgba(0, 0, 255, 0.5)', clickHandler: this.handleRequestAck},
+      {iconName: 'delete', color: 'rgba(255, 0, 0, 0.5)', clickHandler: this.handleRequestDismiss},
+    ]
+
+
     this.state = {
       user: null,                         //TODO: populate with user
       requests: [],
+      numOfActiveRequests: 0,
       location: {                         //TODO: populate with acutal location
                   created : 1479353675672,
                   id : "-KWkLPlvltKizSvBJfN_",
                   name : "College Library",
                   organization_id : "-KWkLPlvltKizSvBJfNZ",
                   updated : 1479353675672
-                }
+                },
+      activeTab: 0,
     }
 
-    this.onRequestHandler.bind(this)
+    this.onRequestHandler = this.onRequestHandler.bind(this)
+    this.handleRequestTabChange = this.handleRequestTabChange.bind(this)
+    this.handleRequestAck = this.handleRequestAck.bind(this)
+    this.handleRequestDismiss = this.handleRequestDismiss.bind(this)
 
   }
 
@@ -78,6 +91,7 @@ class AdminPage extends React.Component {
   componentDidMount() {
     streamRequests(this.state.location.id, this.onRequestHandler.bind(this))
   }
+
 
   onRequestHandler(reqSnapshot){
     const requests = Object.values(reqSnapshot.val())
@@ -95,9 +109,32 @@ class AdminPage extends React.Component {
                                                           console.log(`Req room: ${request.room_id}`)
                                                           return request
                                                         })
-      this.setState({requests: requestsWithRooms})
+      const currActiveCount = requestsWithRooms.reduce((prevValue, currReq) => {
+                                                            const isActive = currReq.status === 0 || currReq.status == 1
+                                                            if(isActive) prevValue++
+                                                            return prevValue
+                                                        }, 0)
+      console.log(currActiveCount)
+      this.setState({requests: requestsWithRooms, numOfActiveRequests: currActiveCount})
     })
   }
+
+  handleRequestTabChange(tabId){
+    this.setState({ activeTab: tabId })
+  }
+
+  handleRequestAck(event){
+    event.preventDefault()
+    const requestId = event.currentTarget.value
+    updateRequestStatus(requestId, ACK_REQUEST)
+  }
+
+  handleRequestDismiss(event){
+    event.preventDefault()
+    const requestId = event.currentTarget.value
+    updateRequestStatus(requestId, IGNORED_REQUEST)
+  }
+  // const smallContentCards = buildSmallContentCards()
 
 
   render() {
@@ -108,7 +145,7 @@ class AdminPage extends React.Component {
         </div>
         <div className={s.largeCardContainer}>
           {renderLargeCard('Requests By Room', colors.brightGreen, "check")}
-          {renderActiveRequests('Currently Active Issues', colors.redMedium, "check", this.state.requests)}
+          {renderActiveRequests('Currently Active Issues', colors.redMedium, "check", this.state.requests, this.actionButtons, this.state.activeTab, this.handleRequestTabChange)}
         </div>
       </Layout>
     )
@@ -132,19 +169,23 @@ const renderLargeCard = (title, color, iconName) => (
   </div>
 )
 
-const renderActiveRequests = (title, color, iconName, requests) => {
+const renderActiveRequests = (title, color, iconName, requests, actionButtons, activeTab, changeTab) => {
   return(
   <div className={s.largeCard}>
     <ContentCard title={title} color={color} iconName={iconName}>
-      <div className='' />
-      {requests ? requests.map((request, key) => renderRequestRow(request, key)) : <Loader />}
+    <Tabs activeTab={activeTab} onChange={tabId => changeTab(tabId)} ripple>
+                 <Tab>NEW</Tab>
+                 <Tab>ACKNOWLEDGED</Tab>
+                 <Tab>SATISFIED</Tab>
+             </Tabs>
+      {requests ? requests.map((request, key) => renderRequestRow(request, key, actionButtons)) : <Loader />}
       <div/>
     </ContentCard>
   </div>
 )
 }
 
-const renderRequestRow = (request, key) => {
+const renderRequestRow = (request, key, actionButtons) => {
   const isHighPriority = moment().diff(request.created, 'minutes') > 45 ? true : false
   const timeDiff = moment(request.created).fromNow()
   return  (<PictureRow key={key}
@@ -152,9 +193,15 @@ const renderRequestRow = (request, key) => {
               name={request.room.name}
               detail={request.room.detail}
               picURL={request.room.image_url}
+              actionButtons={actionButtons}
+              value={request.id}
               isHighPriority={isHighPriority}
               time={timeDiff}/>)
 
 }
+
+const requestFilter = status => (
+  request => request.status === status
+)
 
 export default AdminPage
