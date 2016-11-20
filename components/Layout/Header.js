@@ -13,16 +13,18 @@ import Navigation from './Navigation'
 import Link from '../Link'
 import s from './Header.css'
 
-const Header = ({name, email}) => {
-
+const Header = ({admin}) => {
+    console.log(admin)
     return (
       <header className={`mdl-layout__header ${s.header}`}>
-          {window.location.pathname === "/admin" ? renderAdminNavigation(name, email) : null}
+          {admin ? renderAdminNavigation(admin.email, admin.name) : null}
       </header>
     )
 }
 
-const renderAdminNavigation = (name, email) => (
+const renderAdminNavigation = (name, email) => {
+  console.log(name)
+  return(
   <div className={`mdl-layout__header-row ${s.row}`}>
     <div>
       <Navigation />
@@ -35,5 +37,6 @@ const renderAdminNavigation = (name, email) => (
     </div>
   </div>
 )
+}
 
 export default Header;

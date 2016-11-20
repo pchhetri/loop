@@ -94,6 +94,7 @@ const config = {
           path.resolve(__dirname, './components'),
           path.resolve(__dirname, './core'),
           path.resolve(__dirname, './pages'),
+          path.resolve(__dirname, './helpers'),
           path.resolve(__dirname, './main.js'),
           path.resolve(__dirname, './constants'),
           path.resolve(__dirname, './config.js'),

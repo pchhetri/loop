@@ -25,7 +25,7 @@ class Welcome extends React.Component {
           color: '#000',
           height: '176px',
           background: 'url("/img/welcome.jpg") center / cover'
-        }}>Welcome to LOOP!</CardTitle>
+        }}>Welcome to NODAFI!</CardTitle>
         <CardText>
           We make submitting issues with a building or facility&nbsp;<i>really</i>&nbsp;easy. Simply enter the room code below!
         </CardText>

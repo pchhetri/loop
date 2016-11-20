@@ -16,7 +16,7 @@ const PIN = "pin" //room.pin
 const LOCATION_ID = "location_id" //room.pin
 
 
-const firebaseClient = () => {
+export function firebaseClient() {
   if (firebase.apps.length == 1) {
     return firebase // Don't initialize more than one client
   }

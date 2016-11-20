@@ -16,7 +16,7 @@ function Footer() {
   return (
     <footer className={`${s.footer} mdl-mini-footer`}>
       <div className="mdl-mini-footer__left-section">
-        <div className="mdl-logo">©LOOP</div>
+        <div className="mdl-logo">©Nodafi</div>
         <ul className="mdl-mini-footer__link-list">
           <li><Link to="/terms">Privacy & Terms</Link></li>
         </ul>

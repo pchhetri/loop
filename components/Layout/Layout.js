@@ -18,6 +18,7 @@ class Layout extends React.Component {
 
   static propTypes = {
     className: PropTypes.string,
+    adminInfo: PropTypes.object,
   };
 
   render() {
@@ -25,8 +26,7 @@ class Layout extends React.Component {
       <div className="mdl-layout mdl-js-layout" ref={node => (this.root = node)}>
         <div className={`mdl-layout__inner-container ${s.container}`}>
           <div className={s.header}>
-            <Header name="John Doe"
-                    email="johndoe@example.com"
+            <Header admin={this.props.adminInfo}
              />
            </div>
             <div {...this.props} className={s.content} />

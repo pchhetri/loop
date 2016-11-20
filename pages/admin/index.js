@@ -23,6 +23,7 @@ import MetricText from '../../components/MetricText/MetricText'
 import { streamRequests, fetchRoomsByIdAndLocation, updateRequestStatus, streamRequestOff } from '../../core/firebaseApi'
 import { NEW_REQUEST, ACK_REQUEST, IGNORED_REQUEST, SATISFIED_REQUEST } from '../../constants'
 import moment from 'moment'
+import { authenticate, currentUser } from '../../helpers/session'
 
 const dataTypes = {
   SOLVED_ISSUES: 0,
@@ -114,8 +115,13 @@ class AdminPage extends React.Component {
 
   }
 
+  componentWillMount() {
+    authenticate()
+  }
+
 
   componentDidMount() {
+    document.title = "Nodafi Admin"
     streamRequests(this.state.location.id, this.onRequestHandler)
   }
 
@@ -214,9 +220,9 @@ class AdminPage extends React.Component {
 
   render() {
     const req_status = mapTabToFilter(this.state.activeTab)
-
+    const user = currentUser()
     return (
-      <Layout className={s.content}>
+      <Layout className={s.content} adminInfo={user}>
         <div className={s.smallCardContainer}>
           {smallContentCards.map(this.bindDataTypes).map(renderSmallCards)}
         </div>
