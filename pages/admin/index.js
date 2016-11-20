@@ -199,7 +199,8 @@ class AdminPage extends React.Component {
         break
 
       case AVG_RESPONSE_TIME:
-        contentCard.data = 22.2
+        const reqWithAckTime = this.state.requests.filter(request => request.ack_time ? true : false)
+        contentCard.data = reqWithAckTime.reduce(averageResponseTime, 0).toFixed(2)
         break
 
       default:
@@ -320,6 +321,11 @@ const mapTabToFilter = tabId => (
 const requestFilter = status => (
   request => request.status === status
 )
+
+const averageResponseTime = (prevAvg, currReq, index, array) => {
+    const currResponseTime = moment(currReq.ack_time).diff(moment(currReq.created), 'minutes', true)
+    return (currResponseTime + prevAvg) / (index + 1.0)
+}
 
 const updatedToday = data => {
   //Moment is stupid and mutates the object when you call a function (WHY?!) so

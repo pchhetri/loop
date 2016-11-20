@@ -86,7 +86,7 @@ const firebaseClient = () => {
   export function updateRequestStatus(requestId, status) {
     let updateRequest = {status: status, updated: firebase.database.ServerValue.TIMESTAMP}
 
-    if(status === ACK_REQUEST) updateRequest.ack_time = firebase.database.ServerValue.TIMESTAMP
+    if(status === ACK_REQUEST || status === IGNORED_REQUEST) updateRequest.ack_time = firebase.database.ServerValue.TIMESTAMP
 
     return firebase.database().ref(`${REQUESTS}/${requestId}`).update(updateRequest)
   }
