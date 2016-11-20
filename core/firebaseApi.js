@@ -1,5 +1,7 @@
 import firebase from 'firebase'
 import globalConfig from '../config'
+import { NEW_REQUEST, ACK_REQUEST, IGNORED_REQUEST, SATISFIED_REQUEST } from '../constants'
+
 
 const ORGANIZATIONS = 'organizations'
 const LOCATIONS     = 'locations'
@@ -64,22 +66,27 @@ const firebaseClient = () => {
       .on(VALUE, successCallback)
   }
 
+  export function streamRequestOff(callbackFunction) {
+    firebaseClient().database().ref(REQUESTS).off(VALUE, callbackFunction)
+  }
+
 
 
   //Add a new request to Firebase
   export function putRequests(requests) {
     //Add id (via 1st map),  timestamps (via 2nd map), format for update (via reduce)
     const updateRequests = requests.map(request => Object.assign(request, {id: firebase.database().ref(REQUESTS).push().key}))
-                                       .map(withTimestamps)
-                                       .reduce((prevRequest, currRequest) => updateFormatter(prevRequest, currRequest ,REQUESTS), {})
+                                   .map(withTimestamps)
+                                   .reduce((prevRequest, currRequest) => updateFormatter(prevRequest, currRequest, REQUESTS), {})
 
     return firebase.database().ref().update(updateRequests)
   }
 
   //Add a new request to Firebase
   export function updateRequestStatus(requestId, status) {
+    let updateRequest = {status: status, updated: firebase.database.ServerValue.TIMESTAMP}
 
-    const updateRequest = {status: status, updated: firebase.database.ServerValue.TIMESTAMP}
+    if(status === ACK_REQUEST) updateRequest.ack_time = firebase.database.ServerValue.TIMESTAMP
 
     return firebase.database().ref(`${REQUESTS}/${requestId}`).update(updateRequest)
   }

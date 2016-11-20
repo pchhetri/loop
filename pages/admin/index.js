@@ -17,42 +17,59 @@ import PictureRow from '../../components/PictureRow/PictureRow'
 import Footer from '../../components/Footer/Footer'
 import Loader from '../../components/Loader/Loader'
 import { Tabs, Tab } from 'react-mdl'
+import {Chart} from 'react-google-charts'
 import colors from '../../constants/colors'
 import MetricText from '../../components/MetricText/MetricText'
-import { streamRequests, fetchRoomsByIdAndLocation, updateRequestStatus } from '../../core/firebaseApi'
+import { streamRequests, fetchRoomsByIdAndLocation, updateRequestStatus, streamRequestOff } from '../../core/firebaseApi'
 import { NEW_REQUEST, ACK_REQUEST, IGNORED_REQUEST, SATISFIED_REQUEST } from '../../constants'
 import moment from 'moment'
+
+const dataTypes = {
+  SOLVED_ISSUES: 0,
+  AVG_RESPONSE_TIME: 1,
+  ACTIVE_ISSUES: 2,
+  NEW_ISSUES: 3,
+}
+
 
 const smallContentCards = [
   {
     title: 'Issues Solved Today',
     color: colors.brightGreen,
     iconName: "check",
-    data: 7,
+    dataType: dataTypes.SOLVED_ISSUES,
     unit: "",
   },
   {
     title: 'Average Response Time',
     color: colors.lightTeal,
     iconName: "alarm",
-    data: 21.5,
+    dataType: dataTypes.AVG_RESPONSE_TIME,
     unit: "min",
   },
   {
-    title: 'Current Active Issues',
+    title: 'All Active Issues',
     color: colors.lightBlue,
     iconName: "info",
-    data: 5,
+    dataType: dataTypes.ACTIVE_ISSUES,
     unit: "",
   },
   {
-    title: 'Issues Solved Today',
+    title: 'New Issues',
     color: colors.brightGreen,
     iconName: "check",
-    data: 2,
+    dataType: dataTypes.NEW_ISSUES,
     unit: "",
   },
 ]
+
+const graphOptions = {
+  legend: {
+    positon: 'bottom',
+    textStyle: {fontSize: 16}
+  },
+  pieHole: 0.40,
+}
 
 
 class AdminPage extends React.Component {
@@ -61,10 +78,17 @@ class AdminPage extends React.Component {
     super(props)
 
     this.actionButtons = [
-      {iconName: 'visibility', color:'rgba(0, 0, 255, 0.5)', clickHandler: this.handleRequestAck},
-      {iconName: 'delete', color: 'rgba(255, 0, 0, 0.5)', clickHandler: this.handleRequestDismiss},
+      [
+        {iconName: 'visibility', color:'rgba(0, 0, 255, 0.5)', clickHandler: this.handleRequestAck},
+        {iconName: 'delete', color: 'rgba(255, 0, 0, 0.5)', clickHandler: this.handleRequestIgnore},
+      ],
+      [
+        {iconName: 'check', color:'rgba(0, 255, 0, 0.5)', clickHandler: this.handleRequestSatisfied},
+        {iconName: 'delete', color: 'rgba(255, 0, 0, 0.5)', clickHandler: this.handleRequestIgnore},
+      ],
+      [ //No icons for the third tab column
+      ],
     ]
-
 
     this.state = {
       user: null,                         //TODO: populate with user
@@ -78,19 +102,27 @@ class AdminPage extends React.Component {
                   updated : 1479353675672
                 },
       activeTab: 0,
+      roomPerRequestData: [],
     }
 
     this.onRequestHandler = this.onRequestHandler.bind(this)
     this.handleRequestTabChange = this.handleRequestTabChange.bind(this)
     this.handleRequestAck = this.handleRequestAck.bind(this)
-    this.handleRequestDismiss = this.handleRequestDismiss.bind(this)
+    this.handleRequestIgnore = this.handleRequestIgnore.bind(this)
+    this.handleRequestSatisfied = this.handleRequestSatisfied.bind(this)
+    this.bindDataTypes = this.bindDataTypes.bind(this)
 
   }
 
 
   componentDidMount() {
-    streamRequests(this.state.location.id, this.onRequestHandler.bind(this))
+    streamRequests(this.state.location.id, this.onRequestHandler)
   }
+
+  componentWillUnmount () {
+    streamRequestOff(this.onRequestHandler)
+  }
+
 
 
   onRequestHandler(reqSnapshot){
@@ -115,7 +147,14 @@ class AdminPage extends React.Component {
                                                             return prevValue
                                                         }, 0)
       console.log(currActiveCount)
-      this.setState({requests: requestsWithRooms, numOfActiveRequests: currActiveCount})
+      const requestsCountPerRoom = Array.from(requests.reduce(requestsPerRoom, new Map()))
+                                                      .map(map=>{
+                                                        console.log(map)
+                                                        return [map[1].label, map[1].count]
+                                                      })
+      const graphData =[["Room", "Request Count"], ...requestsCountPerRoom]
+
+      this.setState({requests: requestsWithRooms, numOfActiveRequests: currActiveCount, roomPerRequestData: graphData})
     })
   }
 
@@ -123,29 +162,75 @@ class AdminPage extends React.Component {
     this.setState({ activeTab: tabId })
   }
 
+
+  //TODO: Definitely could consolidate these.. too lazy right now though
   handleRequestAck(event){
     event.preventDefault()
     const requestId = event.currentTarget.value
     updateRequestStatus(requestId, ACK_REQUEST)
   }
 
-  handleRequestDismiss(event){
+  handleRequestIgnore(event){
     event.preventDefault()
     const requestId = event.currentTarget.value
     updateRequestStatus(requestId, IGNORED_REQUEST)
   }
-  // const smallContentCards = buildSmallContentCards()
 
+  handleRequestSatisfied(event){
+    event.preventDefault()
+    const requestId = event.currentTarget.value
+    updateRequestStatus(requestId, SATISFIED_REQUEST)
+  }
+
+  bindDataTypes(contentCard){
+    const { SOLVED_ISSUES, ACTIVE_ISSUES, NEW_ISSUES, AVG_RESPONSE_TIME } = dataTypes
+
+    switch (contentCard.dataType) {
+      case SOLVED_ISSUES:
+        contentCard.data = this.state.requests.filter(requestFilter(SATISFIED_REQUEST)).filter(updatedToday).length
+        break
+
+      case ACTIVE_ISSUES:
+        contentCard.data = this.state.requests.filter(requestFilter(NEW_REQUEST)).length + this.state.requests.filter(requestFilter(ACK_REQUEST)).length
+        break
+
+      case NEW_ISSUES:
+        contentCard.data = this.state.requests.filter(requestFilter(NEW_REQUEST)).length
+        break
+
+      case AVG_RESPONSE_TIME:
+        contentCard.data = 22.2
+        break
+
+      default:
+        contentCard.data = ""
+        break
+    }
+
+    return contentCard
+
+  }
 
   render() {
+    const req_status = mapTabToFilter(this.state.activeTab)
+
     return (
       <Layout className={s.content}>
         <div className={s.smallCardContainer}>
-          {smallContentCards.map(renderSmallCards)}
+          {smallContentCards.map(this.bindDataTypes).map(renderSmallCards)}
         </div>
         <div className={s.largeCardContainer}>
-          {renderLargeCard('Requests By Room', colors.brightGreen, "check")}
-          {renderActiveRequests('Currently Active Issues', colors.redMedium, "check", this.state.requests.filter(requestFilter(this.state.activeTab)), this.actionButtons, this.state.activeTab, this.handleRequestTabChange)}
+          {renderLargeCard('Requests By Room', colors.brightGreen,
+                                               "check",
+                                               graphOptions,
+                                               this.state.roomPerRequestData)}
+          {renderActiveRequests('Currently Active Issues', colors.redMedium,
+                                'check',
+                                this.state.requests.filter(requestFilter(req_status)),
+                                this.actionButtons[this.state.activeTab],
+                                this.state.activeTab,
+                                this.handleRequestTabChange,
+                                req_status)}
         </div>
       </Layout>
     )
@@ -162,33 +247,35 @@ const renderSmallCards = ({title, color, iconName, data, unit}, key) => (
   </div>
 )
 
-const renderLargeCard = (title, color, iconName) => (
+const renderLargeCard = (title, color, iconName, graphOptions, graphData) => (
   <div className={s.largeCard}>
-    <ContentCard title={title} color={color} iconName={iconName}>
+    <ContentCard title={title} color={color} iconName={iconName} className={s.graphCard}>
+      {renderPieChart(graphOptions, graphData)}
     </ContentCard>
   </div>
 )
 
-const renderActiveRequests = (title, color, iconName, requests, actionButtons, activeTab, changeTab) => {
-  return(
+const renderActiveRequests = (title, color, iconName, requests, actionButtons, activeTab, changeTab, status) => (
   <div className={s.largeCard}>
-    <ContentCard title={title} color={color} iconName={iconName}>
-    <Tabs activeTab={activeTab} onChange={tabId => changeTab(tabId)} ripple>
-                 <Tab>NEW</Tab>
-                 <Tab>ACKNOWLEDGED</Tab>
-                 <Tab>SATISFIED</Tab>
-             </Tabs>
-      {requests ? requests.map((request, key) => renderRequestRow(request, key, actionButtons)) : <Loader />}
-      <div/>
+    <ContentCard title={title} color={color} iconName={iconName} header={requestCardHeader(activeTab, changeTab)}>
+      {requests ? requests.map((request, key) => renderRequestRow(request, key, actionButtons, status)) : <Loader />}
     </ContentCard>
   </div>
 )
-}
 
-const renderRequestRow = (request, key, actionButtons) => {
-  const isHighPriority = moment().diff(request.created, 'minutes') > 45 ? true : false
+
+const requestCardHeader = (activeTab, changeTab) => (
+  <Tabs activeTab={activeTab} onChange={tabId => changeTab(tabId)} ripple>
+               <Tab className={activeTab === 0 ? s.activeTab : s.inactiveTab}>NEW</Tab>
+               <Tab className={activeTab === 1 ? s.activeTab : s.inactiveTab}>ACKNOWLEDGED</Tab>
+               <Tab className={activeTab === 2 ? s.activeTab : s.inactiveTab}>SATISFIED</Tab>
+           </Tabs>
+)
+
+const renderRequestRow = (request, key, actionButtons, status) => {
+  const isHighPriority = moment().diff(request.created, 'minutes') > 45 && status !== SATISFIED_REQUEST ? true : false
   const timeDiff = moment(request.created).fromNow()
-  return  (<PictureRow key={key}
+  return  (<PictureRow className={s.pictureRow} key={key}
               info={request.description}
               name={request.room.name}
               detail={request.room.detail}
@@ -200,8 +287,46 @@ const renderRequestRow = (request, key, actionButtons) => {
 
 }
 
+const renderPieChart = (options, data) => {
+    console.log(data)
+    return(
+    <Chart  chartType="PieChart"
+            options={options}
+            data={data}
+            width="90%"
+            height="90%"/>)
+}
+
+//TODO: Extract these into a separate "helper section"
+const requestsPerRoom = (requestCountMap, request) => {
+  if(!requestCountMap.get(request.room_id)) {
+    requestCountMap.set(request.room_id, {
+                                          label: `${request.room.name} - ${request.room.detail}`,
+                                          count: 0,
+                                        })
+  }
+
+  requestCountMap.get(request.room_id).count++
+  return requestCountMap
+
+}
+
+// 2nd tab (id = 2) is SATISFIED but SATISFIED_REQUEST == 3, so have to map
+// it differently
+const mapTabToFilter = tabId => (
+  tabId === 2 ? SATISFIED_REQUEST : tabId
+)
+
 const requestFilter = status => (
   request => request.status === status
 )
+
+const updatedToday = data => {
+  //Moment is stupid and mutates the object when you call a function (WHY?!) so
+  //we have to make copies of everything
+  const dayStart = moment().startOf('day')
+  const dayEnd = moment().endOf('day')
+  return moment(data.updated).isBetween(dayStart, dayEnd, null, '[]')
+}
 
 export default AdminPage
