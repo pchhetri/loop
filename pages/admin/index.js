@@ -257,7 +257,8 @@ const renderSmallCards = ({title, color, iconName, data, unit}, key) => (
 const renderLargeCard = (title, color, iconName, graphOptions, graphData) => (
   <div className={s.largeCard}>
     <ContentCard title={title} color={color} iconName={iconName} className={s.graphCard}>
-      {renderPieChart(graphOptions, graphData)}
+      {graphData && graphData.length > 0 ? renderPieChart(graphOptions, graphData) :
+                                           <Loader/>}
     </ContentCard>
   </div>
 )

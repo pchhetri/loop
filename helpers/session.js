@@ -2,6 +2,7 @@ import firebase from 'firebase'
 
 import globalConfig from '../config'
 import { redirectTo } from './navigation'
+import { firebaseClient } from '../core/firebaseApi'
 
 export const CURRENT_USER = 'nodafi::currentUser'
 
@@ -70,20 +71,4 @@ export const login = (email, password, loginSuccessCallback, loginFailureCallbac
     .catch((error) => {
       loginFailureCallback(error.message)
     })
-}
-
-function firebaseClient() {
-  if (firebase.apps.length == 1) {
-    return firebase // Don't initialize more than one client
-  }
-
-  const config = {
-    apiKey: globalConfig.firebase.apiKey,
-    authDomain: globalConfig.firebase.authDomain,
-    databaseURL: globalConfig.firebase.databaseUrl,
-  }
-
-  firebase.initializeApp(config)
-
-  return firebase
 }

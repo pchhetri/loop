@@ -17,6 +17,10 @@ class LoginPage extends Component {
     }
   }
 
+  componentWillMount(){
+    document.title = 'Login'
+  }
+
   handleSubmit = (email, password) => {
     this.setState({loggingIn: true})
     login(email, password, this.loginSuccess, this.loginFailure)
@@ -35,13 +39,13 @@ class LoginPage extends Component {
     const { loggingIn } = this.state
 
     return (
-      <Layout admin>
+      <Layout>
         {
           loggingIn ?
             <Loading /> :
             <div>
               {this.state.error ? <Error message={this.state.error} /> : null}
-              <Login handleSubmit={this.handleSubmit} error={this.error}/>
+              <Login handleSubmit={this.handleSubmit} error={this.state.error}/>
             </div>
         }
       </Layout>

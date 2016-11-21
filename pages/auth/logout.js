@@ -18,7 +18,7 @@ class LogoutPage extends Component {
 
   render() {
     return (
-      <Layout admin></Layout>
+      <Layout></Layout>
     )
   }
 }
