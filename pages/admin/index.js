@@ -17,7 +17,7 @@ import PictureRow from '../../components/PictureRow/PictureRow'
 import Footer from '../../components/Footer/Footer'
 import Loader from '../../components/Loader/Loader'
 import { Tabs, Tab } from 'react-mdl'
-import {Chart} from 'react-google-charts'
+import { Chart } from 'react-google-charts'
 import colors from '../../constants/colors'
 import MetricText from '../../components/MetricText/MetricText'
 import { streamRequests, fetchRoomsByIdAndLocation, updateRequestStatus, streamRequestOff } from '../../core/firebaseApi'
@@ -121,7 +121,7 @@ class AdminPage extends React.Component {
 
 
   componentDidMount() {
-    document.title = "Nodafi Admin"
+    document.title = "NodaFi Admin"
     streamRequests(this.state.location.id, this.onRequestHandler)
   }
 

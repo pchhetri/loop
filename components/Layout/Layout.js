@@ -13,27 +13,33 @@ import cx from 'classnames';
 import Header from './Header';
 import Footer from '../Footer';
 import s from './Layout.css';
+import { redirectTo } from '../../helpers/navigation'
+
 
 class Layout extends React.Component {
 
   static propTypes = {
     className: PropTypes.string,
     adminInfo: PropTypes.object,
-  };
+  }
+
 
   render() {
     return (
       <div className="mdl-layout mdl-js-layout" ref={node => (this.root = node)}>
         <div className={`mdl-layout__inner-container ${s.container}`}>
           <div className={s.header}>
-            <Header admin={this.props.adminInfo}
-             />
+            <Header admin={this.props.adminInfo} handleLogout={handleLogout}/>
            </div>
             <div {...this.props} className={s.content} />
         </div>
       </div>
-    );
+    )
   }
+}
+
+const handleLogout = () => {
+  redirectTo('/logout')
 }
 
 export default Layout;

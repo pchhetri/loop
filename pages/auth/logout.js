@@ -13,7 +13,7 @@ class LogoutPage extends Component {
   }
 
   componentDidMount() {
-    document.title = 'Nodafi Admin'
+    document.title = 'NodaFi Admin'
   }
 
   render() {

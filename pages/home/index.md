@@ -1,5 +1,5 @@
 ---
-title: NODAFI
+title: NodaFi
 ---
 
 #### Hey there!

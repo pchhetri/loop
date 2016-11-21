@@ -27,6 +27,7 @@
     }
   ],
   "dependencies": {
+    "aws-sdk": "^2.7.5",
     "babel-polyfill": "^6.9.1",
     "classnames": "^2.2.5",
     "fastclick": "^1.0.6",
