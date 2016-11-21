@@ -18,4 +18,10 @@ firebase-debug.log
 
 # Mac Files
 .DS_Store
+<<<<<<< HEAD
+
+# Secrets
+.config
+=======
 scratchpad
+>>>>>>> 3022a99ea5ef1707f1762fadfefa0eadbdca2d1f

@@ -4,6 +4,7 @@
   flex-direction: row;
   align-items: baseline;
   vertical-align: text-bottom;
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .mainText {

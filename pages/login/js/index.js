@@ -201,7 +201,7 @@ var Login = (function(_React$Component2) {
                 },
                 React.createElement(
                     'img', {
-                        src:"public/img/loop-logo.png" 
+                        src:"public/img/nodafi-logo.png" 
                     }    
                 ),
                 React.createElement(
@@ -216,7 +216,7 @@ var Login = (function(_React$Component2) {
                 React.createElement(
                     'header',
                     null,
-                    'Loop Sign in'
+                    'NodaFi Sign in'
                     
                 ),
                 React.createElement(ExpandableInput, {

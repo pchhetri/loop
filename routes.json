@@ -5,6 +5,15 @@
     "chunk": "main"
   },
   {
+    "path": "/rooms/:roomId",
+    "page": "./pages/requests/index",
+    "chunk": "main"
+  },
+  {
+    "path": "/requests/confirmation",
+    "page": "./pages/requests/confirmation"
+  },
+  {
     "path": "/error",
     "page": "./pages/error",
     "chunk": "main"
@@ -20,5 +29,13 @@
   {
     "path": "/admin",
     "page": "./pages/admin"
+  },
+  {
+    "path": "/login",
+    "page": "./pages/auth/login"
+  },
+  {
+    "path": "/logout",
+    "page": "./pages/auth/logout"
   }
 ]

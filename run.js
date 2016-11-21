@@ -18,7 +18,7 @@ const globalConfig = require('./config');
 
 // TODO: Update configuration settings
 const config = {
-  title: 'React Static Boilerplate',        // Your website title
+  title: 'NodaFi',        // Your website title
   url: 'https://rsb.kriasoft.com',          // Your website URL
   project: 'react-static-boilerplate',      // Firebase project. See README.md -> How to Deploy
   trackingID: 'UA-XXXXX-Y',                 // Google Analytics Site's ID
@@ -99,19 +99,29 @@ tasks.set('build', () => {
 tasks.set('publish', () => {
   global.DEBUG = process.argv.includes('--debug') || false;
   const s3 = require('s3');
+
+  const s3Options = {
+    region: 'us-east-2',
+    sslEnabled: true,
+    signatureVersion: 'v4',
+    s3DisableBodySigning: true,
+    accessKeyId: globalConfig.s3.accessKeyId,
+    secretAccessKey: globalConfig.s3.secretAccessKey,
+  };
+
   return run('build').then(() => new Promise((resolve, reject) => {
+    const AWS = require('aws-sdk'); // https://www.npmjs.com/package/aws-sdk
+
+    // use newest sdk to avoid: https://github.com/andrewrk/node-s3-client/issues/69
+    const awsS3Client = new AWS.S3(s3Options);
+
     const client = s3.createClient({
-      s3Options: {
-        region: 'us-east-1',
-        sslEnabled: true,
-        accessKeyId: globalConfig.s3.accessKeyId,
-        secretAccessKey: globalConfig.s3.secretAccessKey,
-      },
+      s3Client: awsS3Client,
     });
     const uploader = client.uploadDir({
       localDir: 'public',
       deleteRemoved: true,
-      s3Params: { Bucket: globalConfig.s3.bucket },
+      s3Params: { Bucket: globalConfig.s3.bucket, Prefix: '' },
     });
     uploader.on('error', reject);
     uploader.on('end', resolve);
