@@ -1,5 +1,7 @@
 # nodafi
 
+[![Build Status](https://travis-ci.com/pchhetri/loop.svg?token=DeSspbhf6UF4ubrqu9HP&branch=master)](https://travis-ci.com/pchhetri/loop)
+
 ### [Ongoing Development]
 
 Project structure based on https://github.com/koistya/react-static-boilerplate
@@ -14,7 +16,7 @@ Documentation is available under `docs` for offline viewing or via links below:
 
 ### Quick Setup
 
-1. `git clone git@github.com:pchhetri/nodafi.git`
+1. `git clone git@github.com:pchhetri/loop.git`
 2. `cd nodafi`
 3. `npm install`
 4. `npm start`
