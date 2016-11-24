@@ -148,6 +148,12 @@ const config = {
     ],
   },
 
+  externals: {
+    'react/addons': true,
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true
+  },
+
   // The list of plugins for PostCSS
   // https://github.com/postcss/postcss
   postcss(bundler) {
