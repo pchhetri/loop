@@ -91,15 +91,28 @@ class AdminPage extends React.Component {
       ],
     ]
 
+    /*************************
+    TODO: USE THIS IN MASTER
+
+    created : 1479353675672,
+    id : "-KWkLPlvltKizSvBJfN_",
+    name : "College Library",
+    organization_id : "-KWkLPlvltKizSvBJfNZ",
+    updated : 1479353675672
+
+
+    *****************************/
+
+    //Changed To DEVELOPER LOCATION
     this.state = {
       user: null,                         //TODO: populate with user
       requests: [],
       numOfActiveRequests: 0,
       location: {                         //TODO: populate with acutal location
                   created : 1479353675672,
-                  id : "-KWkLPlvltKizSvBJfN_",
-                  name : "College Library",
-                  organization_id : "-KWkLPlvltKizSvBJfNZ",
+                  id : "-KXqVQ5gz50PFUQ3sa0B",
+                  name : "Development",
+                  organization_id : "-KXqVQ5farRZBjECel3K",
                   updated : 1479353675672
                 },
       activeTab: 0,

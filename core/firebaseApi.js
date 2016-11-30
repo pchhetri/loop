@@ -63,6 +63,7 @@ export function firebaseClient() {
       .database()
       .ref(REQUESTS)
       .orderByChild(LOCATION_ID)
+      .equalTo(location_id)
       .on(VALUE, successCallback)
   }
 
