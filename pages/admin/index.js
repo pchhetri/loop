@@ -134,6 +134,7 @@ class AdminPage extends React.Component {
   onRequestHandler(reqSnapshot){
     const requests = Object.values(reqSnapshot.val())
     //Grab each room from the requests and extract the roomIds, removing duplicates
+    // TODO: Do not load rooms twice, should also check if key exists on the requests
     const roomIds = Object.keys(requests.map(request => request.room_id)
                                         .reduce ((roomIds, newRoomId) =>
                                             {
@@ -160,6 +161,7 @@ class AdminPage extends React.Component {
                                                       })
       const graphData =[["Room", "Request Count"], ...requestsCountPerRoom]
 
+      //TODO: add new requests to the top, not the bottom
       this.setState({requests: requestsWithRooms, numOfActiveRequests: currActiveCount, roomPerRequestData: graphData})
     })
   }
