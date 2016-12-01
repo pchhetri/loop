@@ -46,12 +46,14 @@ class RequestPage extends React.Component {
                                                       status: NEW_REQUEST,
                                                     }))
 
-      const selectedIssuesWithCustom = [...selectedIssues, {description: this.state.textFieldValue,
+      //Add the custom field if the textFieldValue has value, otherwise keep selectedIssues
+      const selectedIssuesWithCustom = this.state.textFieldValue.length > 0 ? [...selectedIssues, {description: this.state.textFieldValue,
                       comments: '',
                       room_id: this.state.room.id,
                       location_id: this.state.room.location_id,
                       type_id: -1,
-                      status: NEW_REQUEST,}]
+                      status: NEW_REQUEST,}] : selectedIssues
+
      putRequests(selectedIssuesWithCustom)
      history.push(`/requests/confirmation`)
 
