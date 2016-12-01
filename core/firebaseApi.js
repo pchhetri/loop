@@ -13,7 +13,7 @@ const ID      = 'id'
 const VALUE    = 'value'
 
 const PIN = "pin" //room.pin
-const LOCATION_ID = "location_id" //room.pin
+const LOCATION_ID = "location_id"
 
 
 export function firebaseClient() {

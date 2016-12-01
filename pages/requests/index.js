@@ -39,14 +39,23 @@ class RequestPage extends React.Component {
      const selectedIssues = this.state.room.default_requests
                                       .filter((req, index) => this.state.checked[index])
                                       .map(issue => ({description: issue.description,
-                                                      comments: this.state.textFieldValue,
+                                                      comments: '',
                                                       room_id: this.state.room.id,
                                                       location_id: this.state.room.location_id,
                                                       type_id: issue.type_id,
                                                       status: NEW_REQUEST,
                                                     }))
-     putRequests(selectedIssues)
-     history.push(`/requests/confirmation`);
+
+      //Add the custom field if the textFieldValue has value, otherwise keep selectedIssues
+      const selectedIssuesWithCustom = this.state.textFieldValue.length > 0 ? [...selectedIssues, {description: this.state.textFieldValue,
+                      comments: '',
+                      room_id: this.state.room.id,
+                      location_id: this.state.room.location_id,
+                      type_id: -1,
+                      status: NEW_REQUEST,}] : selectedIssues
+
+     putRequests(selectedIssuesWithCustom)
+     history.push(`/requests/confirmation`)
 
    }
 

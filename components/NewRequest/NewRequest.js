@@ -26,7 +26,14 @@ const NewRequest = ({room, isChecked, onRequest, onCheck, value, handleTextChang
       <p>Please select an issue.</p>
       <List className={s.list}>
         {room.default_requests.map((choice, index) => eachChoice(choice, index, onCheck, isChecked[index]))}
-        <Textfield value={value} onChange={handleTextChange} floatingLabel rows={2} label="Other issue..." className={s['text-field']}/>
+        <ListItem value={room.default_requests.length} onClick={choice => onCheck(choice)}>
+          <ListItemContent value={room.default_requests.length} >
+            <Textfield value={value} onChange={handleTextChange} floatingLabel rows={2} label="Enter a custom issue..." className={s['text-field']}/>
+          </ListItemContent>
+          <ListItemAction>
+            <Checkbox ripple value={room.default_requests.length} checked={value.length > 0}/>
+          </ListItemAction>
+        </ListItem>
       </List>
     </CardText>
   </Card>
