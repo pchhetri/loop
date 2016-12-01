@@ -91,6 +91,25 @@ class AdminPage extends React.Component {
       ],
     ]
 
+    /*************************
+    TODO: USE THIS IN MASTER
+    created : 1479353675672,
+    id : "-KWkLPlvltKizSvBJfN_",
+    name : "College Library",
+    organization_id : "-KWkLPlvltKizSvBJfNZ",
+    updated : 1479353675672
+    *****************************/
+
+    /***************************
+    Use this in Development
+    created : 1479353675672,
+    id : "-KXqVQ5gz50PFUQ3sa0B",
+    name : "Development",
+    organization_id : "-KXqVQ5farRZBjECel3K",
+    updated : 1479353675672
+    ***************************/
+
+    //Changed To DEVELOPER LOCATION
     this.state = {
       user: null,                         //TODO: populate with user
       requests: [],
@@ -134,6 +153,7 @@ class AdminPage extends React.Component {
   onRequestHandler(reqSnapshot){
     const requests = Object.values(reqSnapshot.val())
     //Grab each room from the requests and extract the roomIds, removing duplicates
+    // TODO: Do not load rooms twice, should also check if key exists on the requests
     const roomIds = Object.keys(requests.map(request => request.room_id)
                                         .reduce ((roomIds, newRoomId) =>
                                             {
@@ -160,6 +180,7 @@ class AdminPage extends React.Component {
                                                       })
       const graphData =[["Room", "Request Count"], ...requestsCountPerRoom]
 
+      //TODO: add new requests to the top, not the bottom
       this.setState({requests: requestsWithRooms, numOfActiveRequests: currActiveCount, roomPerRequestData: graphData})
     })
   }

@@ -13,7 +13,7 @@ const ID      = 'id'
 const VALUE    = 'value'
 
 const PIN = "pin" //room.pin
-const LOCATION_ID = "location_id" //room.pin
+const LOCATION_ID = "location_id"
 
 
 export function firebaseClient() {
@@ -63,6 +63,7 @@ export function firebaseClient() {
       .database()
       .ref(REQUESTS)
       .orderByChild(LOCATION_ID)
+      .equalTo(location_id)
       .on(VALUE, successCallback)
   }
 
