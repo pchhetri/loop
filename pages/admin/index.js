@@ -100,6 +100,15 @@ class AdminPage extends React.Component {
     updated : 1479353675672
     *****************************/
 
+    /***************************
+    Use this in Development
+    created : 1479353675672,
+    id : "-KXqVQ5gz50PFUQ3sa0B",
+    name : "Development",
+    organization_id : "-KXqVQ5farRZBjECel3K",
+    updated : 1479353675672
+    ***************************/
+
     //Changed To DEVELOPER LOCATION
     this.state = {
       user: null,                         //TODO: populate with user
@@ -107,9 +116,9 @@ class AdminPage extends React.Component {
       numOfActiveRequests: 0,
       location: {                         //TODO: populate with acutal location
                   created : 1479353675672,
-                  id : "-KXqVQ5gz50PFUQ3sa0B",
-                  name : "Development",
-                  organization_id : "-KXqVQ5farRZBjECel3K",
+                  id : "-KWkLPlvltKizSvBJfN_",
+                  name : "College Library",
+                  organization_id : "-KWkLPlvltKizSvBJfNZ",
                   updated : 1479353675672
                 },
       activeTab: 0,
