@@ -71,7 +71,13 @@ export function firebaseClient() {
     firebaseClient().database().ref(REQUESTS).off(VALUE, callbackFunction)
   }
 
-
+  export function fetchRooms(successCallback) {
+      return firebaseClient()
+        .database()
+        .ref(ROOMS)
+        .orderByChild(PIN)
+        .once(VALUE, successCallback)
+    }
 
   //Add a new request to Firebase
   export function putRequests(requests) {
