@@ -63,6 +63,11 @@
   justify-content: center;
 }
 
+.activeTab, .inactiveTab {
+  text-transform: uppercase;
+  user-select: none;
+}
+
 .activeTab {
   font-weight: bold;
   color: rgba(43,80,226,.8);

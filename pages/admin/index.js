@@ -17,11 +17,12 @@ import PictureRow from '../../components/PictureRow/PictureRow'
 import Footer from '../../components/Footer/Footer'
 import Loader from '../../components/Loader/Loader'
 import { Tabs, Tab } from 'react-mdl'
+import ReactTooltip from 'react-tooltip'
 import { Chart } from 'react-google-charts'
 import colors from '../../constants/colors'
 import MetricText from '../../components/MetricText/MetricText'
-import { streamRequests, fetchRoomsByIdAndLocation, updateRequestStatus, streamRequestOff } from '../../core/firebaseApi'
-import { NEW_REQUEST, ACK_REQUEST, IGNORED_REQUEST, SATISFIED_REQUEST } from '../../constants'
+import { streamRequests, fetchRe ,fetchRoomsByIdAndLocation, updateRequestStatus, streamRequestOff } from '../../core/firebaseApi'
+import { NEW_REQUEST, ACK_REQUEST, IGNORED_REQUEST, SATISFIED_REQUEST, ON_VALUE } from '../../constants'
 import moment from 'moment'
 import { authenticate, currentUser } from '../../helpers/session'
 
@@ -91,25 +92,6 @@ class AdminPage extends React.Component {
       ],
     ]
 
-    /*************************
-    TODO: USE THIS IN MASTER
-    created : 1479353675672,
-    id : "-KWkLPlvltKizSvBJfN_",
-    name : "College Library",
-    organization_id : "-KWkLPlvltKizSvBJfNZ",
-    updated : 1479353675672
-    *****************************/
-
-    /***************************
-    Use this in Development
-    created : 1479353675672,
-    id : "-KXqVQ5gz50PFUQ3sa0B",
-    name : "Development",
-    organization_id : "-KXqVQ5farRZBjECel3K",
-    updated : 1479353675672
-    ***************************/
-
-    //Changed To DEVELOPER LOCATION
     this.state = {
       user: null,                         //TODO: populate with user
       requests: [],
@@ -141,11 +123,11 @@ class AdminPage extends React.Component {
 
   componentDidMount() {
     document.title = "NodaFi Admin"
-    streamRequests(this.state.location.id, this.onRequestHandler)
+    streamRequests(ON_VALUE, this.state.location.id, this.onRequestHandler)
   }
 
   componentWillUnmount () {
-    streamRequestOff(this.onRequestHandler)
+    streamRequestOff(ON_VALUE, this.onRequestHandler)
   }
 
 
@@ -153,7 +135,6 @@ class AdminPage extends React.Component {
   onRequestHandler(reqSnapshot){
     const requests = Object.values(reqSnapshot.val())
     //Grab each room from the requests and extract the roomIds, removing duplicates
-    // TODO: Do not load rooms twice, should also check if key exists on the requests
     const roomIds = Object.keys(requests.map(request => request.room_id)
                                         .reduce ((roomIds, newRoomId) =>
                                             {
@@ -178,10 +159,12 @@ class AdminPage extends React.Component {
                                                         console.log(map)
                                                         return [map[1].label, map[1].count]
                                                       })
+
       const graphData =[["Room", "Request Count"], ...requestsCountPerRoom]
 
-      //TODO: add new requests to the top, not the bottom
-      this.setState({requests: requestsWithRooms, numOfActiveRequests: currActiveCount, roomPerRequestData: graphData})
+      const sortedRequests = requestsWithRooms.sort((curr, next) => next.created - curr.created)
+
+      this.setState({requests: sortedRequests, numOfActiveRequests: currActiveCount, roomPerRequestData: graphData})
     })
   }
 
@@ -260,6 +243,7 @@ class AdminPage extends React.Component {
                                 this.handleRequestTabChange,
                                 req_status)}
         </div>
+        <div><ReactTooltip /></div>
       </Layout>
     )
   }
@@ -295,9 +279,23 @@ const renderActiveRequests = (title, color, iconName, requests, actionButtons, a
 
 const requestCardHeader = (activeTab, changeTab) => (
   <Tabs activeTab={activeTab} onChange={tabId => changeTab(tabId)} ripple>
-               <Tab className={activeTab === 0 ? s.activeTab : s.inactiveTab}>NEW</Tab>
-               <Tab className={activeTab === 1 ? s.activeTab : s.inactiveTab}>ACKNOWLEDGED</Tab>
-               <Tab className={activeTab === 2 ? s.activeTab : s.inactiveTab}>SATISFIED</Tab>
+               <Tab className={activeTab === 0 ? s.activeTab : s.inactiveTab}
+                    data-tip="New issues"
+                    data-type="info"
+                    data-place="bottom"
+                    data-delay-show='500'>NEW</Tab>
+
+               <Tab className={activeTab === 1 ? s.activeTab : s.inactiveTab}
+                    data-tip="Issues that have been acknowledged by staff"
+                    data-type="info"
+                    data-place="bottom"
+                    data-delay-show='500'>ACKNOWLEDGED</Tab>
+
+               <Tab className={activeTab === 2 ? s.activeTab : s.inactiveTab}
+                    data-tip="Issues that have been taken care of"
+                    data-type="info"
+                    data-place="bottom"
+                    data-delay-show='500'>SATISFIED</Tab>
            </Tabs>
 )
 

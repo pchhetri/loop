@@ -11,9 +11,12 @@ const REQUESTS      = 'requests'
 const ID      = 'id'
 
 const VALUE    = 'value'
+const CHILD_ADDED    = 'child_added'
+const CHILD_CHANGED    = 'child_changed'
 
 const PIN = "pin" //room.pin
 const LOCATION_ID = "location_id"
+const ROOM_ID = "room_id"
 
 
 export function firebaseClient() {
@@ -57,18 +60,42 @@ export function firebaseClient() {
                                                      .reduce((prevRoom, currRoom) => arrayToObject(prevRoom, currRoom), {}))
   }
 
-
-  export function streamRequests(location_id, successCallback) {
+  export function fetchRoomsById(cache, roomId) {
+    const cachedRoom = cache.get(roomId)
+    return cachedRoom !== undefined ? cachedRoom :
     firebaseClient()
+      .database()
+      .ref(ROOMS)
+      .orderByKey()
+      .equalTo(roomId)
+      .once(VALUE)
+      .then(roomRes => {
+          const room = roomRes.val()
+          return room ? room[Object.keys(room)] : null  //grabs the first room since FB gives us multiple objects
+        })
+  }
+
+  export function fetchRequestsByLocation(location_id) {
+    return firebaseClient()
       .database()
       .ref(REQUESTS)
       .orderByChild(LOCATION_ID)
       .equalTo(location_id)
-      .on(VALUE, successCallback)
+      .once(VALUE)
+      .then(res => res)
   }
 
-  export function streamRequestOff(callbackFunction) {
-    firebaseClient().database().ref(REQUESTS).off(VALUE, callbackFunction)
+  export function streamRequests(eventType, locationId, successCallback) {
+    firebaseClient()
+      .database()
+      .ref(REQUESTS)
+      .orderByChild(LOCATION_ID)
+      .equalTo(locationId)
+      .on(eventType, successCallback)
+  }
+
+  export function streamRequestOff(event_type, callbackFunction) {
+    firebaseClient().database().ref(REQUESTS).off(event_type, callbackFunction)
   }
 
 
