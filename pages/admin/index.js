@@ -145,7 +145,6 @@ class AdminPage extends React.Component {
     fetchRoomsByIdAndLocation(roomIds, this.state.location.id).then((rooms)=>{
       const requestsWithRooms = requests.map(request => {
                                                           request.room = rooms[request.room_id]
-                                                          console.log(`Req room: ${request.room_id}`)
                                                           return request
                                                         })
       const currActiveCount = requestsWithRooms.reduce((prevValue, currReq) => {
@@ -153,10 +152,8 @@ class AdminPage extends React.Component {
                                                             if(isActive) prevValue++
                                                             return prevValue
                                                         }, 0)
-      console.log(currActiveCount)
       const requestsCountPerRoom = Array.from(requests.reduce(requestsPerRoom, new Map()))
                                                       .map(map=>{
-                                                        console.log(map)
                                                         return [map[1].label, map[1].count]
                                                       })
 
@@ -315,7 +312,6 @@ const renderRequestRow = (request, key, actionButtons, status) => {
 }
 
 const renderPieChart = (options, data) => {
-    console.log(data)
     return(
     <Chart  chartType="PieChart"
             options={options}
