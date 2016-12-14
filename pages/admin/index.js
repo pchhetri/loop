@@ -16,7 +16,7 @@ import ContentCard from '../../components/ContentCard/ContentCard'
 import PictureRow from '../../components/PictureRow/PictureRow'
 import Footer from '../../components/Footer/Footer'
 import Loader from '../../components/Loader/Loader'
-import { Tabs, Tab } from 'react-mdl'
+import { Tabs, Tab, Badge } from 'react-mdl'
 import ReactTooltip from 'react-tooltip'
 import { Chart } from 'react-google-charts'
 import colors from '../../constants/colors'
@@ -105,6 +105,8 @@ class AdminPage extends React.Component {
                 },
       activeTab: 0,
       roomPerRequestData: [],
+      unseenNewIssues: 0,
+      newTabOpen: true,
     }
 
     this.onRequestHandler = this.onRequestHandler.bind(this)
@@ -161,12 +163,20 @@ class AdminPage extends React.Component {
 
       const sortedRequests = requestsWithRooms.sort((curr, next) => next.created - curr.created)
 
-      this.setState({requests: sortedRequests, numOfActiveRequests: currActiveCount, roomPerRequestData: graphData})
+      const unseenNewIssues = this.state.newTabOpen ? 0 : this.state.unseenNewIssues + sortedRequests.length - this.state.requests.length
+
+      this.setState({requests: sortedRequests, numOfActiveRequests: currActiveCount, roomPerRequestData: graphData, unseenNewIssues: unseenNewIssues})
     })
   }
 
   handleRequestTabChange(tabId){
-    this.setState({ activeTab: tabId })
+    if (tabId === NEW_REQUEST) {
+      const unseenNewIssues = 0
+      this.setState({ activeTab: tabId, newTabOpen: true, unseenNewIssues: unseenNewIssues })
+    }
+    else {
+      this.setState({ activeTab: tabId, newTabOpen: false })
+    }
   }
 
 
@@ -238,7 +248,8 @@ class AdminPage extends React.Component {
                                 this.actionButtons[this.state.activeTab],
                                 this.state.activeTab,
                                 this.handleRequestTabChange,
-                                req_status)}
+                                req_status,
+                                this.state.unseenNewIssues)}
         </div>
         <div><ReactTooltip /></div>
       </Layout>
@@ -265,31 +276,32 @@ const renderLargeCard = (title, color, iconName, graphOptions, graphData) => (
   </div>
 )
 
-const renderActiveRequests = (title, color, iconName, requests, actionButtons, activeTab, changeTab, status) => (
+const renderActiveRequests = (title, color, iconName, requests, actionButtons, activeTab, changeTab, status, unseenNewIssues) => (
   <div className={s.largeCard}>
-    <ContentCard title={title} color={color} iconName={iconName} header={requestCardHeader(activeTab, changeTab)}>
+    <ContentCard title={title} color={color} iconName={iconName} header={requestCardHeader(activeTab, changeTab, unseenNewIssues)}>
       {requests ? requests.map((request, key) => renderRequestRow(request, key, actionButtons, status)) : <Loader />}
     </ContentCard>
   </div>
 )
 
 
-const requestCardHeader = (activeTab, changeTab) => (
+const requestCardHeader = (activeTab, changeTab, unseenNewIssues) => (
   <Tabs activeTab={activeTab} onChange={tabId => changeTab(tabId)} ripple>
                <Tab className={activeTab === 0 ? s.activeTab : s.inactiveTab}
-                    data-tip="New issues"
+                    data-tip="New issues."
                     data-type="info"
                     data-place="bottom"
-                    data-delay-show='500'>NEW</Tab>
+                    data-delay-show='500'>{unseenNewIssues > 0 ? <Badge text={unseenNewIssues}>NEW</Badge>
+                                                               : 'NEW'}</Tab>
 
                <Tab className={activeTab === 1 ? s.activeTab : s.inactiveTab}
-                    data-tip="Issues that have been acknowledged by staff"
+                    data-tip="Issues that have been acknowledged by staff."
                     data-type="info"
                     data-place="bottom"
                     data-delay-show='500'>ACKNOWLEDGED</Tab>
 
                <Tab className={activeTab === 2 ? s.activeTab : s.inactiveTab}
-                    data-tip="Issues that have been taken care of"
+                    data-tip="Issues that have been settled."
                     data-type="info"
                     data-place="bottom"
                     data-delay-show='500'>SATISFIED</Tab>
