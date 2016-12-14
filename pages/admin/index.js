@@ -163,6 +163,11 @@ class AdminPage extends React.Component {
 
       const sortedRequests = requestsWithRooms.sort((curr, next) => next.created - curr.created)
 
+      if ( sortedRequests.filter(requestFilter(NEW_REQUEST)).length >
+           this.state.requests.filter(requestFilter(NEW_REQUEST)).length ) {
+              document.getElementById("notificationAudio").play() 
+      }
+
       const unseenNewIssues = this.state.newTabOpen ? 0 : this.state.unseenNewIssues + sortedRequests.length - this.state.requests.length
 
       this.setState({requests: sortedRequests, numOfActiveRequests: currActiveCount, roomPerRequestData: graphData, unseenNewIssues: unseenNewIssues})
@@ -251,7 +256,12 @@ class AdminPage extends React.Component {
                                 req_status,
                                 this.state.unseenNewIssues)}
         </div>
-        <div><ReactTooltip /></div>
+        <div>
+          <ReactTooltip />
+          <audio id="notificationAudio">
+            <source src="img/good-news.mp3" type="audio/mpeg"/>
+          </audio>
+        </div>
       </Layout>
     )
   }
