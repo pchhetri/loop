@@ -1,7 +1,7 @@
 import React from 'react'
 import Navigation from './Navigation'
 import Link from '../Link'
-import { Button } from 'react-mdl'
+import { IconButton, Menu, MenuItem ,Button } from 'react-mdl'
 import s from './Header.css'
 
 const Header = ({admin, handleLogout}) => {
@@ -22,9 +22,18 @@ const renderAdminNavigation = (name, email, handleLogout) => (
         <img className={s.icon} src='img/circle_person.png'/>
       </Link>
       <h6>{name}<br/>{email}</h6>
-      <Button style={{color: 'white'}} ripple onClick={handleLogout}>Logout</Button>
+      {renderAdminMenu(handleLogout)}
     </div>
   </div>
+)
+
+const renderAdminMenu = (handleLogout) => (
+  <div style={{position: 'relative'}}>
+    <IconButton name="more_vert" id="demo-menu-lower-right" />
+    <Menu target="demo-menu-lower-right" align="right">
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+    </Menu>
+</div>
 )
 
 export default Header;

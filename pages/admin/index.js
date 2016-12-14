@@ -165,7 +165,7 @@ class AdminPage extends React.Component {
 
       if ( sortedRequests.filter(requestFilter(NEW_REQUEST)).length >
            this.state.requests.filter(requestFilter(NEW_REQUEST)).length ) {
-              document.getElementById("notificationAudio").play() 
+              document.getElementById("notificationAudio").play()
       }
 
       const unseenNewIssues = this.state.newTabOpen ? 0 : this.state.unseenNewIssues + sortedRequests.length - this.state.requests.length
@@ -259,7 +259,7 @@ class AdminPage extends React.Component {
         <div>
           <ReactTooltip />
           <audio id="notificationAudio">
-            <source src="img/good-news.mp3" type="audio/mpeg"/>
+            <source src="good-news.mp3" type="audio/mpeg"/>
           </audio>
         </div>
       </Layout>
