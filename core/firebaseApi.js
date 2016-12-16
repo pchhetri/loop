@@ -7,6 +7,7 @@ const ORGANIZATIONS = 'organizations'
 const LOCATIONS     = 'locations'
 const USERS         = 'users'
 const ROOMS         = 'rooms'
+const ROOM_TYPES    = 'room_types'
 const REQUESTS      = 'requests'
 const ID      = 'id'
 
@@ -71,7 +72,34 @@ export function firebaseClient() {
     firebaseClient().database().ref(REQUESTS).off(VALUE, callbackFunction)
   }
 
+  export function streamRooms(location_id, successCallback) {
+    firebaseClient()
+      .database()
+      .ref(ROOMS)
+      .orderByChild(LOCATION_ID)
+      .equalTo(location_id)
+      .on(VALUE, successCallback)
+  }
 
+  export function streamRoomsOff(callbackFunction) {
+    firebaseClient().database().ref(ROOMS).off(VALUE, callbackFunction)
+  }
+
+  export function fetchRoomTypes(successCallback) {
+    return firebaseClient()
+      .database()
+      .ref(ROOM_TYPES)
+      .orderByKey()
+      .once(VALUE, successCallback)
+  }
+
+  export function fetchRoomCodes(successCallback) {
+    return firebaseClient()
+      .database()
+      .ref(ROOMS)
+      .orderByKey()
+      .once(VALUE, successCallback)
+  }
 
   //Add a new request to Firebase
   export function putRequests(requests) {

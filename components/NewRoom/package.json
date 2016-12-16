@@ -1,0 +1,6 @@
+{
+  "name": "NewRoom",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./NewRoom.js"
+}
