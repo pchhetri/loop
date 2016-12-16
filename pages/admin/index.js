@@ -231,7 +231,8 @@ class AdminPage extends React.Component {
 
       case AVG_RESPONSE_TIME:
         const reqWithAckTime = this.state.requests.filter(request => request.ack_time ? true : false)
-        contentCard.data = reqWithAckTime.reduce(averageResponseTime, 0).toFixed(2)
+        const avgResponseTime = reqWithAckTime.reduce(totalResponseTime, 0) / reqWithAckTime.length
+        contentCard.data = avgResponseTime.toFixed(2)
         break
 
       default:
@@ -373,9 +374,9 @@ const requestFilter = status => (
   request => request.status === status
 )
 
-const averageResponseTime = (prevAvg, currReq, index, array) => {
+const totalResponseTime = (prevTotal, currReq, index, array) => {
     const currResponseTime = moment(currReq.ack_time).diff(moment(currReq.created), 'minutes', true)
-    return (currResponseTime + prevAvg) / (index + 1.0)
+    return (currResponseTime + prevTotal)
 }
 
 const updatedToday = data => {
