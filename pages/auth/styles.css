@@ -1,0 +1,23 @@
+.loginTitle {
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ .logo {
+   width: 50px;
+ }
+
+ .loginTitle h2 {
+   font-weight: 400;
+   padding: 0 0 0 15px;
+  }
+
+
+@media screen and (max-width: 1024px) {
+
+  .content {
+    padding: 0 16px;
+  }
+
+}

@@ -7,4 +7,7 @@ module.exports =  {
   ON_VALUE: 'value',
   ON_CHILD_ADDED: 'child_added',
   ON_CHILD_CHANGED: 'child_changed',
+  LOGIN_INIT: 0,
+  LOGIN_WORKING : 1,
+  LOGIN_OK : 2
 }

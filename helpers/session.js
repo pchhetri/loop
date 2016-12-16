@@ -45,6 +45,10 @@ export const destroySession = () => {
   delete sessionStorage[CURRENT_USER]
 }
 
+export const toLogout = () => {
+  redirectTo('/logout')
+}
+
 export const login = (email, password, loginSuccessCallback, loginFailureCallback) => {
   const firebase = firebaseClient()
 

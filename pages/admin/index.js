@@ -20,6 +20,7 @@ import { Tabs, Tab, Badge } from 'react-mdl'
 import ReactTooltip from 'react-tooltip'
 import { Chart } from 'react-google-charts'
 import colors from '../../constants/colors'
+import { toLogout } from '../../helpers/session'
 import MetricText from '../../components/MetricText/MetricText'
 import { streamRequests, fetchRe ,fetchRoomsByIdAndLocation, updateRequestStatus, streamRequestOff } from '../../core/firebaseApi'
 import { NEW_REQUEST, ACK_REQUEST, IGNORED_REQUEST, SATISFIED_REQUEST, ON_VALUE } from '../../constants'
@@ -59,7 +60,7 @@ const smallContentCards = [
   {
     title: 'New Issues',
     color: colors.brightGreen,
-    iconName: "check",
+    iconName: "notifications",
     dataType: dataTypes.NEW_ISSUES,
     unit: "",
   },
@@ -107,6 +108,7 @@ class AdminPage extends React.Component {
       roomPerRequestData: [],
       unseenNewIssues: 0,
       newTabOpen: true,
+      isNotificationOn: true,
     }
 
     this.onRequestHandler = this.onRequestHandler.bind(this)
@@ -115,7 +117,7 @@ class AdminPage extends React.Component {
     this.handleRequestIgnore = this.handleRequestIgnore.bind(this)
     this.handleRequestSatisfied = this.handleRequestSatisfied.bind(this)
     this.bindDataTypes = this.bindDataTypes.bind(this)
-
+    this.handleNotificationStatus = this.handleNotificationStatus.bind(this)
   }
 
   componentWillMount() {
@@ -163,8 +165,10 @@ class AdminPage extends React.Component {
 
       const sortedRequests = requestsWithRooms.sort((curr, next) => next.created - curr.created)
 
-      if ( sortedRequests.filter(requestFilter(NEW_REQUEST)).length >
-           this.state.requests.filter(requestFilter(NEW_REQUEST)).length ) {
+      if ( document.getElementById("notificationAudio") &&
+           sortedRequests.filter(requestFilter(NEW_REQUEST)).length >
+           this.state.requests.filter(requestFilter(NEW_REQUEST)).length &&
+           this.state.isNotificationOn) {
               document.getElementById("notificationAudio").play()
       }
 
@@ -204,6 +208,21 @@ class AdminPage extends React.Component {
     updateRequestStatus(requestId, SATISFIED_REQUEST)
   }
 
+  handleNotificationStatus(){
+    console.log(this.state.isNotificationOn)
+    this.setState({isNotificationOn: !this.state.isNotificationOn})
+  }
+
+  getMuteStatus(){
+    console.log(this.state.isNotificationOn)
+    this.setState({isNotificationOn: !this.state.isNotificationOn})
+  }
+
+  menuOptions = [
+                  {action: this.handleNotificationStatus.bind(this), textFunction: () => this.state.isNotificationOn ? 'Mute' : 'Unmute'},
+                  {action: toLogout, textFunction: ()=>'Logout'},
+                ]
+
   bindDataTypes(contentCard){
     const { SOLVED_ISSUES, ACTIVE_ISSUES, NEW_ISSUES, AVG_RESPONSE_TIME } = dataTypes
 
@@ -229,26 +248,24 @@ class AdminPage extends React.Component {
         contentCard.data = ""
         break
     }
-
     return contentCard
-
   }
 
   render() {
     const req_status = mapTabToFilter(this.state.activeTab)
     const user = currentUser()
     return (
-      <Layout className={s.content} adminInfo={user}>
+      <Layout className={s.content} adminInfo={user} menuOptions={this.menuOptions} handleNotificationStatus={this.handleNotificationStatus} isNotificationOn={this.state.isNotificationOn}>
         <div className={s.smallCardContainer}>
           {smallContentCards.map(this.bindDataTypes).map(renderSmallCards)}
         </div>
         <div className={s.largeCardContainer}>
           {renderLargeCard('Requests By Room', colors.brightGreen,
-                                               "check",
+                                               "assessment",
                                                graphOptions,
                                                this.state.roomPerRequestData)}
           {renderActiveRequests('Currently Active Issues', colors.redMedium,
-                                'check',
+                                'list',
                                 this.state.requests.filter(requestFilter(req_status)),
                                 this.actionButtons[this.state.activeTab],
                                 this.state.activeTab,
