@@ -15,3 +15,14 @@
   }
 
 }
+
+.error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  text-align: center;
+}
+
+.errorMsg {
+  margin-bottom: 5px;
+}

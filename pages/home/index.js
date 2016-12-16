@@ -16,6 +16,7 @@ import Welcome from '../../components/Welcome'
 import Loader from '../../components/Loader'
 import history from '../../core/history'
 import RequestConfirmation from '../../components/RequestConfirmation'
+import {fetchRooms} from '../../core/firebaseApi'
 
 class HomePage extends React.Component {
 
@@ -25,19 +26,44 @@ class HomePage extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      code: null,
+      error: null
+    }
     this.handleCode = this.handleCode.bind(this)
+    this.onRequestHandler = this.onRequestHandler.bind(this)
   }
 
-  handleCode(code)  {
-    history.push(`/rooms/${code}`);
+  handleCode(code) {
+    this.setState({code: code})
+    fetchRooms(this.onRequestHandler)
   }
 
+  onRequestHandler(data) {
+    const rooms = Object.values(data.val())
+    const roomCodes = rooms.map(function(e) {
+      return (e.pin);
+    });
+    if (roomCodes.includes(this.state.code)) {
+      history.push(`/rooms/${this.state.code}`);
+    } else {
+      this.setState({error: true})
+    }
+  }
 
   render() {
+    let errorMessage = null;
+    if (this.state.error) {
+      errorMessage = (
+        <div className={s.error}>
+          <p className={s.errorMsg}><strong>ERROR: </strong>Invalid room code, please try again.</p>
+        </div>
+      )
+    }
     return (
       <Layout className={s.content}>
-        {/* <div dangerouslySetInnerHTML={{ __html: html }} /> */}
-        <Welcome onCode={this.handleCode}/>
+        {errorMessage}
+        <Welcome onCode={this.handleCode} error={this.state.error}/>
       </Layout>
     );
   }
