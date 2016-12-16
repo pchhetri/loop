@@ -232,7 +232,7 @@ class AdminPage extends React.Component {
       case AVG_RESPONSE_TIME:
         const reqWithAckTime = this.state.requests.filter(request => request.ack_time ? true : false)
         const avgResponseTime = reqWithAckTime.reduce(totalResponseTime, 0) / reqWithAckTime.length
-        contentCard.data = avgResponseTime.toFixed(2)
+        contentCard.data = isNaN(avgResponseTime) ? <Loader /> : avgResponseTime.toFixed(2) 
         break
 
       default:
