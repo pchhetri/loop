@@ -1,6 +1,6 @@
 {
   "name": "nodafi",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "engines": {
     "node": ">=6",
@@ -11,20 +11,11 @@
       "name": "Prateek Chhetri"
     },
     {
-      "name": "Emily Meyer"
-    },
-    {
       "name": "Jacob Pandl"
     },
     {
       "name": "Dan Pettay"
     },
-    {
-      "name": "Jack Staker"
-    },
-    {
-      "name": "Alex Valaitis"
-    }
   ],
   "dependencies": {
     "aws-sdk": "^2.7.5",
