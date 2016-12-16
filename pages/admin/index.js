@@ -1,13 +1,3 @@
-/**
- * React Static Boilerplate
- * https://github.com/kriasoft/react-static-boilerplate
- *
- * Copyright © 2015-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React from 'react'
 import Layout from '../../components/Layout'
 import s from './styles.css'
@@ -22,7 +12,7 @@ import { Chart } from 'react-google-charts'
 import colors from '../../constants/colors'
 import { toLogout } from '../../helpers/session'
 import MetricText from '../../components/MetricText/MetricText'
-import { streamRequests, fetchRe ,fetchRoomsByIdAndLocation, updateRequestStatus, streamRequestOff } from '../../core/firebaseApi'
+import { streamRequests ,fetchRoomsByIdAndLocation, updateRequestStatus, streamRequestOff } from '../../core/firebaseApi'
 import { NEW_REQUEST, ACK_REQUEST, IGNORED_REQUEST, SATISFIED_REQUEST, ON_VALUE } from '../../constants'
 import moment from 'moment'
 import { authenticate, currentUser } from '../../helpers/session'
