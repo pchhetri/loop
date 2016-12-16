@@ -31,6 +31,10 @@
     "page": "./pages/admin"
   },
   {
+    "path": "/rooms",
+    "page": "./pages/rooms"
+  },
+  {
     "path": "/login",
     "page": "./pages/auth/login"
   },

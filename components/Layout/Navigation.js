@@ -26,6 +26,7 @@ class Navigation extends React.Component {
     return (
       <nav className="mdl-navigation" ref={node => (this.root = node)}>
         <Link className={`mdl-navigation__link ${s.navLink}`} to="/admin">Requests</Link>
+        <Link className={`mdl-navigation__link ${s.navLink}`} to="/rooms">Rooms</Link>
       </nav>
     );
   }
