@@ -1,13 +1,3 @@
-/**
- * React Static Boilerplate
- * https://github.com/kriasoft/react-static-boilerplate
- *
- * Copyright © 2015-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React from 'react'
 import Layout from '../../components/Layout'
 import s from './styles.css'
@@ -16,12 +6,14 @@ import ContentCard from '../../components/ContentCard/ContentCard'
 import PictureRow from '../../components/PictureRow/PictureRow'
 import Footer from '../../components/Footer/Footer'
 import Loader from '../../components/Loader/Loader'
-import { Tabs, Tab } from 'react-mdl'
+import { Tabs, Tab, Badge } from 'react-mdl'
+import ReactTooltip from 'react-tooltip'
 import { Chart } from 'react-google-charts'
 import colors from '../../constants/colors'
+import { toLogout } from '../../helpers/session'
 import MetricText from '../../components/MetricText/MetricText'
-import { streamRequests, fetchRoomsByIdAndLocation, updateRequestStatus, streamRequestOff } from '../../core/firebaseApi'
-import { NEW_REQUEST, ACK_REQUEST, IGNORED_REQUEST, SATISFIED_REQUEST } from '../../constants'
+import { streamRequests ,fetchRoomsByIdAndLocation, updateRequestStatus, streamRequestOff } from '../../core/firebaseApi'
+import { NEW_REQUEST, ACK_REQUEST, IGNORED_REQUEST, SATISFIED_REQUEST, ON_VALUE } from '../../constants'
 import moment from 'moment'
 import { authenticate, currentUser } from '../../helpers/session'
 
@@ -58,7 +50,7 @@ const smallContentCards = [
   {
     title: 'New Issues',
     color: colors.brightGreen,
-    iconName: "check",
+    iconName: "notifications",
     dataType: dataTypes.NEW_ISSUES,
     unit: "",
   },
@@ -91,25 +83,6 @@ class AdminPage extends React.Component {
       ],
     ]
 
-    /*************************
-    TODO: USE THIS IN MASTER
-    created : 1479353675672,
-    id : "-KWkLPlvltKizSvBJfN_",
-    name : "College Library",
-    organization_id : "-KWkLPlvltKizSvBJfNZ",
-    updated : 1479353675672
-    *****************************/
-
-    /***************************
-    Use this in Development
-    created : 1479353675672,
-    id : "-KXqVQ5gz50PFUQ3sa0B",
-    name : "Development",
-    organization_id : "-KXqVQ5farRZBjECel3K",
-    updated : 1479353675672
-    ***************************/
-
-    //Changed To DEVELOPER LOCATION
     this.state = {
       user: null,                         //TODO: populate with user
       requests: [],
@@ -123,6 +96,9 @@ class AdminPage extends React.Component {
                 },
       activeTab: 0,
       roomPerRequestData: [],
+      unseenNewIssues: 0,
+      newTabOpen: true,
+      isNotificationOn: true,
     }
 
     this.onRequestHandler = this.onRequestHandler.bind(this)
@@ -131,7 +107,7 @@ class AdminPage extends React.Component {
     this.handleRequestIgnore = this.handleRequestIgnore.bind(this)
     this.handleRequestSatisfied = this.handleRequestSatisfied.bind(this)
     this.bindDataTypes = this.bindDataTypes.bind(this)
-
+    this.handleNotificationStatus = this.handleNotificationStatus.bind(this)
   }
 
   componentWillMount() {
@@ -141,11 +117,11 @@ class AdminPage extends React.Component {
 
   componentDidMount() {
     document.title = "NodaFi Admin"
-    streamRequests(this.state.location.id, this.onRequestHandler)
+    streamRequests(ON_VALUE, this.state.location.id, this.onRequestHandler)
   }
 
   componentWillUnmount () {
-    streamRequestOff(this.onRequestHandler)
+    streamRequestOff(ON_VALUE, this.onRequestHandler)
   }
 
 
@@ -153,7 +129,6 @@ class AdminPage extends React.Component {
   onRequestHandler(reqSnapshot){
     const requests = Object.values(reqSnapshot.val())
     //Grab each room from the requests and extract the roomIds, removing duplicates
-    // TODO: Do not load rooms twice, should also check if key exists on the requests
     const roomIds = Object.keys(requests.map(request => request.room_id)
                                         .reduce ((roomIds, newRoomId) =>
                                             {
@@ -164,7 +139,6 @@ class AdminPage extends React.Component {
     fetchRoomsByIdAndLocation(roomIds, this.state.location.id).then((rooms)=>{
       const requestsWithRooms = requests.map(request => {
                                                           request.room = rooms[request.room_id]
-                                                          console.log(`Req room: ${request.room_id}`)
                                                           return request
                                                         })
       const currActiveCount = requestsWithRooms.reduce((prevValue, currReq) => {
@@ -172,21 +146,36 @@ class AdminPage extends React.Component {
                                                             if(isActive) prevValue++
                                                             return prevValue
                                                         }, 0)
-      console.log(currActiveCount)
       const requestsCountPerRoom = Array.from(requests.reduce(requestsPerRoom, new Map()))
                                                       .map(map=>{
-                                                        console.log(map)
                                                         return [map[1].label, map[1].count]
                                                       })
+
       const graphData =[["Room", "Request Count"], ...requestsCountPerRoom]
 
-      //TODO: add new requests to the top, not the bottom
-      this.setState({requests: requestsWithRooms, numOfActiveRequests: currActiveCount, roomPerRequestData: graphData})
+      const sortedRequests = requestsWithRooms.sort((curr, next) => next.created - curr.created)
+
+      if ( document.getElementById("notificationAudio") &&
+           sortedRequests.filter(requestFilter(NEW_REQUEST)).length >
+           this.state.requests.filter(requestFilter(NEW_REQUEST)).length &&
+           this.state.isNotificationOn) {
+              document.getElementById("notificationAudio").play()
+      }
+
+      const unseenNewIssues = this.state.newTabOpen ? 0 : this.state.unseenNewIssues + sortedRequests.length - this.state.requests.length
+
+      this.setState({requests: sortedRequests, numOfActiveRequests: currActiveCount, roomPerRequestData: graphData, unseenNewIssues: unseenNewIssues})
     })
   }
 
   handleRequestTabChange(tabId){
-    this.setState({ activeTab: tabId })
+    if (tabId === NEW_REQUEST) {
+      const unseenNewIssues = 0
+      this.setState({ activeTab: tabId, newTabOpen: true, unseenNewIssues: unseenNewIssues })
+    }
+    else {
+      this.setState({ activeTab: tabId, newTabOpen: false })
+    }
   }
 
 
@@ -208,6 +197,21 @@ class AdminPage extends React.Component {
     const requestId = event.currentTarget.value
     updateRequestStatus(requestId, SATISFIED_REQUEST)
   }
+
+  handleNotificationStatus(){
+    console.log(this.state.isNotificationOn)
+    this.setState({isNotificationOn: !this.state.isNotificationOn})
+  }
+
+  getMuteStatus(){
+    console.log(this.state.isNotificationOn)
+    this.setState({isNotificationOn: !this.state.isNotificationOn})
+  }
+
+  menuOptions = [
+                  {action: this.handleNotificationStatus.bind(this), textFunction: () => this.state.isNotificationOn ? 'Mute' : 'Unmute'},
+                  {action: toLogout, textFunction: ()=>'Logout'},
+                ]
 
   bindDataTypes(contentCard){
     const { SOLVED_ISSUES, ACTIVE_ISSUES, NEW_ISSUES, AVG_RESPONSE_TIME } = dataTypes
@@ -234,31 +238,36 @@ class AdminPage extends React.Component {
         contentCard.data = ""
         break
     }
-
     return contentCard
-
   }
 
   render() {
     const req_status = mapTabToFilter(this.state.activeTab)
     const user = currentUser()
     return (
-      <Layout className={s.content} adminInfo={user}>
+      <Layout className={s.content} adminInfo={user} menuOptions={this.menuOptions} handleNotificationStatus={this.handleNotificationStatus} isNotificationOn={this.state.isNotificationOn}>
         <div className={s.smallCardContainer}>
           {smallContentCards.map(this.bindDataTypes).map(renderSmallCards)}
         </div>
         <div className={s.largeCardContainer}>
           {renderLargeCard('Requests By Room', colors.brightGreen,
-                                               "check",
+                                               "assessment",
                                                graphOptions,
                                                this.state.roomPerRequestData)}
           {renderActiveRequests('Currently Active Issues', colors.redMedium,
-                                'check',
+                                'list',
                                 this.state.requests.filter(requestFilter(req_status)),
                                 this.actionButtons[this.state.activeTab],
                                 this.state.activeTab,
                                 this.handleRequestTabChange,
-                                req_status)}
+                                req_status,
+                                this.state.unseenNewIssues)}
+        </div>
+        <div>
+          <ReactTooltip />
+          <audio id="notificationAudio">
+            <source src="good-news.mp3" type="audio/mpeg"/>
+          </audio>
         </div>
       </Layout>
     )
@@ -284,20 +293,35 @@ const renderLargeCard = (title, color, iconName, graphOptions, graphData) => (
   </div>
 )
 
-const renderActiveRequests = (title, color, iconName, requests, actionButtons, activeTab, changeTab, status) => (
+const renderActiveRequests = (title, color, iconName, requests, actionButtons, activeTab, changeTab, status, unseenNewIssues) => (
   <div className={s.largeCard}>
-    <ContentCard title={title} color={color} iconName={iconName} header={requestCardHeader(activeTab, changeTab)}>
+    <ContentCard title={title} color={color} iconName={iconName} header={requestCardHeader(activeTab, changeTab, unseenNewIssues)}>
       {requests ? requests.map((request, key) => renderRequestRow(request, key, actionButtons, status)) : <Loader />}
     </ContentCard>
   </div>
 )
 
 
-const requestCardHeader = (activeTab, changeTab) => (
+const requestCardHeader = (activeTab, changeTab, unseenNewIssues) => (
   <Tabs activeTab={activeTab} onChange={tabId => changeTab(tabId)} ripple>
-               <Tab className={activeTab === 0 ? s.activeTab : s.inactiveTab}>NEW</Tab>
-               <Tab className={activeTab === 1 ? s.activeTab : s.inactiveTab}>ACKNOWLEDGED</Tab>
-               <Tab className={activeTab === 2 ? s.activeTab : s.inactiveTab}>SATISFIED</Tab>
+               <Tab className={activeTab === 0 ? s.activeTab : s.inactiveTab}
+                    data-tip="New issues."
+                    data-type="info"
+                    data-place="bottom"
+                    data-delay-show='500'>{unseenNewIssues > 0 ? <Badge text={unseenNewIssues}>NEW</Badge>
+                                                               : 'NEW'}</Tab>
+
+               <Tab className={activeTab === 1 ? s.activeTab : s.inactiveTab}
+                    data-tip="Issues that have been acknowledged by staff."
+                    data-type="info"
+                    data-place="bottom"
+                    data-delay-show='500'>ACKNOWLEDGED</Tab>
+
+               <Tab className={activeTab === 2 ? s.activeTab : s.inactiveTab}
+                    data-tip="Issues that have been settled."
+                    data-type="info"
+                    data-place="bottom"
+                    data-delay-show='500'>SATISFIED</Tab>
            </Tabs>
 )
 
@@ -317,7 +341,6 @@ const renderRequestRow = (request, key, actionButtons, status) => {
 }
 
 const renderPieChart = (options, data) => {
-    console.log(data)
     return(
     <Chart  chartType="PieChart"
             options={options}

@@ -25,7 +25,8 @@
 
 .accountSection {
   display: flex;
-  justify-content: space-around
+  justify-content: space-around;
+  align-items: center;
 }
 
 .row {
@@ -42,6 +43,7 @@
 .header {
   height: 50px;
   flex-shrink: 0;
+  background: #3398fd;
 }
 
 @media screen and (max-width: 1024px) {

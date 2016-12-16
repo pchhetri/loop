@@ -29,7 +29,9 @@ class Layout extends React.Component {
       <div className="mdl-layout mdl-js-layout" ref={node => (this.root = node)}>
         <div className={`mdl-layout__inner-container ${s.container}`}>
           <div className={s.header}>
-            <Header admin={this.props.adminInfo} handleLogout={handleLogout}/>
+            <Header admin={this.props.adminInfo}
+                    menuOptions={this.props.menuOptions}
+                    />
            </div>
             <div {...this.props} className={s.content} />
         </div>
@@ -38,8 +40,5 @@ class Layout extends React.Component {
   }
 }
 
-const handleLogout = () => {
-  redirectTo('/logout')
-}
 
 export default Layout;

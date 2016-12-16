@@ -20,7 +20,7 @@ const NewRequest = ({room, isChecked, onRequest, onCheck, value, handleTextChang
   <div>
   <Card shadow={0} className={s.card}>
     <div className={`mdl-card__title mdl-card--expand ${s.cardTitle}`} style={{background: `url(${room.image_url}) center / cover`}}>
-      <h2 className={`mdl-card__title-text ${s.cardTitleText}`}>{room.title}</h2>
+      <h2 className={`mdl-card__title-text ${s.cardTitleText}`}>{room.name}</h2>
     </div>
     <CardText>
       <p>Please select an issue.</p>
